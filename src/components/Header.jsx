@@ -14,15 +14,13 @@ class Header extends Component{
 
                 <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
                     <li><Link to="/pit/"  className="nav-link px-2 link-secondary">Home</Link></li>
-                    <li> <Link  to="/pit/form" className="nav-link px-2 link-dark">Formulário</Link></li>
-                    
-
+                    <li><Link  to="/pit/form" className="nav-link px-2 link-dark">Formulário</Link></li>
                 </ul>
 
                 <div className="col-md-3 text-end">
                     <img width="213" src={LogoDTI} alt="Logo UNILAB"/>
                 </div>
-                </header>
+            </header>
                         
                        
 
