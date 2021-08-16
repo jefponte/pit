@@ -14,10 +14,10 @@ function App() {
       <Router>
         <Header/>
         <Switch >
-          <Route  exact path='/'>
+          <Route  exact path='/pit/'>
             <Home/>
           </Route>
-          <Route path='/form'>
+          <Route exact path='/pit/form'>
            <FormPIT/>
           </Route>
           <Route>
