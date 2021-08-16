@@ -11,6 +11,7 @@ class FormPIT extends Component {
         siape: '',
         periodo: '',
         regime: '',
+        ch: '',
         etapa: 0
     }
     constructor(props){
@@ -53,7 +54,7 @@ class FormPIT extends Component {
                 return (
                     <>
                         <TextField value={this.state.nome} onChange={this.onChange('nome')} id="nome" label="Nome" variant="outlined" fullWidth margin="normal"/>
-                        <TextField onChange={this.onChange('siape')} id="siape" label="SIAPE" variant="outlined" fullWidth margin="normal"/>
+                        <TextField value={this.state.siape} onChange={this.onChange('siape')} id="siape" label="SIAPE" variant="outlined" fullWidth margin="normal"/>
                         
                     </>
 
@@ -63,7 +64,7 @@ class FormPIT extends Component {
                 return (
                     <>
                         <TextField value={this.state.periodo} onChange={this.onChange('periodo')} id="nome" label="Período Letivo" variant="outlined" fullWidth margin="normal"/>
-                        <TextField onChange={this.onChange('regime')} id="regime" label="Regime de Trabalho" variant="outlined" fullWidth margin="normal"/>
+                        <TextField value={this.state.regime} onChange={this.onChange('regime')} id="regime" label="Regime de Trabalho" variant="outlined" fullWidth margin="normal"/>
                     </>
 
                 );
@@ -71,8 +72,8 @@ class FormPIT extends Component {
             case 2:
                 return (
                     <>
-                        <TextField value={this.state.nome} onChange={this.onChange('nome')} id="nome" label="Nome" variant="outlined" fullWidth margin="normal"/>
-                        <TextField onChange={this.onChange('siape')} id="siape" label="SIAPE" variant="outlined" fullWidth margin="normal"/>
+                        <TextField value={this.state.ch} onChange={this.onChange('ch')} id="ch" label="Carga Horária" variant="outlined" margin="normal"/>
+                        <TextField onChange={this.onChange('siape')} id="siape" label="SIAPE" variant="outlined" margin="normal"/><br/><br/>
                     </>
 
                 );
