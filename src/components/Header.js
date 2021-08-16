@@ -7,8 +7,10 @@ class Header extends Component{
         return(
             
             <header className="container">
-                <Link to="/">Teste</Link> ||
-                <Link  to="/sobre">Teste</Link>
+
+                
+                <Link to="/">Home</Link> ||
+                <Link  to="/form">Formulário</Link>
                 
             </header>
             

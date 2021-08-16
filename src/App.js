@@ -15,7 +15,7 @@ function App() {
           <Route  exact path='/'>
             Teswtes
           </Route>
-          <Route path='/sobre'>
+          <Route path='/form'>
            <Post/>
           </Route>
           <Route>
