@@ -4,6 +4,7 @@ import Post from './components/Post';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Pagina404 from './pages/Pagina404';
 import Header from './components/Header';
+import Home from './pages/Home';
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         <Header/>
         <Switch >
           <Route  exact path='/'>
-            Teswtes
+            <Home/>
           </Route>
           <Route path='/form'>
            <Post/>
