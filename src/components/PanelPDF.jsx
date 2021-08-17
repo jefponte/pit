@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
 import Pdf from "react-to-pdf";
 import LogoUNILABPreto from '../assets/img/logo-unilab-preto.png';
-import {Container, Typography, Button} from "@material-ui/core";
+import {Button} from "@material-ui/core";
 const ref = React.createRef();
 
 class PanelPDF extends Component{
@@ -13,7 +12,7 @@ class PanelPDF extends Component{
         return(
 
             <>
-
+               {console.log(this.props)}
                 <div className="Post" ref={ref}>
                     <div className="">
                         <img src={LogoUNILABPreto} width="50%" alt="Logo Unilab"/>

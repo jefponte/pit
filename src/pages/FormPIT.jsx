@@ -1,8 +1,6 @@
-import { Step, StepLabel, Stepper, TextField } from '@material-ui/core';
 import React, {Component} from 'react';
+import { Step, StepLabel, Stepper, TextField } from '@material-ui/core';
 import {Container, Typography, Button} from "@material-ui/core";
-
-
 import PanelPDF from '../components/PanelPDF';
 
 class FormPIT extends Component {
@@ -73,8 +71,7 @@ class FormPIT extends Component {
             case 2:
                 return (
                     <>
-                        <TextField value={this.state.ch} onChange={this.onChange('ch')} id="ch" label="Carga Horária" variant="outlined" margin="normal"/>
-                        <TextField onChange={this.onChange('siape')} id="siape" label="SIAPE" variant="outlined" margin="normal"/><br/><br/>
+                        Teste<br/><br/>
                     </>
 
                 );
