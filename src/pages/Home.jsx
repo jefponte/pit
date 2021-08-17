@@ -10,7 +10,11 @@ const Home = () => {
                 Plano Individual de Trabalho (PIT)
             </Typography>
             
-            <p>Semestralmente, cada docente apresentará ao seu instituto de lotação e de exercício, para aprovação e em data por este fixada, o seu Plano Individual de Trabalho (PIT), no qual estarão discriminadas, por período leƟvo, todas as suas aƟvidades relacionadas à aƟvidade relacionada à docência, pesquisa, extensão e gestão.</p>
+            <p>Semestralmente, cada docente apresentará
+                ao seu instituto de lotação e de exercício,
+                para aprovação e em data por este fixada,
+                o seu Plano Individual de Trabalho (PIT).</p>
+                   
             <p><a href={resolucao}>Download da resolução</a></p>
             
         </Container>

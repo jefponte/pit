@@ -6,16 +6,17 @@ import Pdf from "react-to-pdf";
 import LogoUNILABPreto from '../assets/img/logo-unilab-preto.png';
 const ref = React.createRef();
 class FormPIT extends Component {
-    state = {
-        nome: '',
-        siape: '',
-        periodo: '',
-        regime: '',
-        ch: '',
-        etapa: 0
-    }
+    
     constructor(props){
         super(props);
+        this.state = {
+            nome: '',
+            siape: '',
+            periodo: '',
+            regime: '',
+            ch: '',
+            etapa: 0
+        }
         this.formEtapa.bind(this);
         
     }
