@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 import {Container, Typography, Button} from "@material-ui/core";
 
 import Pdf from "react-to-pdf";
-import LogoUNILAB from '../assets/img/logo-unilab.png';
 import LogoUNILABPreto from '../assets/img/logo-unilab-preto.png';
 const ref = React.createRef();
 class FormPIT extends Component {
@@ -81,9 +80,11 @@ class FormPIT extends Component {
                 break;
             case 3:
                     return (
-                        <Typography variant="h4" component="h2">
-                           Verifique as informações e depois clique em Gerar PDF
-                        </Typography>
+                        <>
+                            <Typography variant="h4" component="h2">
+                            Verifique as informações e depois clique em Gerar PDF
+                            </Typography><br/><br/>
+                        </>
     
                     );
                     break;
