@@ -4,6 +4,7 @@ import {Container, Typography, Button} from "@material-ui/core";
 
 import Pdf from "react-to-pdf";
 import LogoUNILAB from '../assets/img/logo-unilab.png';
+import LogoUNILABPreto from '../assets/img/logo-unilab-preto.png';
 const ref = React.createRef();
 class FormPIT extends Component {
     state = {
@@ -81,7 +82,7 @@ class FormPIT extends Component {
             case 3:
                     return (
                         <Typography variant="h4" component="h2">
-                           Confira as informações e depois clique em Gerar PDF
+                           Verifique as informações e depois clique em Gerar PDF
                         </Typography>
     
                     );
@@ -98,7 +99,6 @@ class FormPIT extends Component {
                     <Step><StepLabel>Pessoal</StepLabel></Step>
                     <Step><StepLabel>Profissional</StepLabel></Step>
                     <Step><StepLabel>Carga Horária</StepLabel></Step>
-                    <Step><StepLabel>Conferir</StepLabel></Step>
                 </Stepper>
 
 
@@ -108,13 +108,14 @@ class FormPIT extends Component {
                     <Button onClick={this.handlerVoltar}  type="submit" variant="contained" color="primary">
                         Voltar
                     </Button>
+                    
                     <Button onClick={this.handlerAvancar}  type="submit" variant="contained" color="primary">
                         Avançar
                     </Button>
                 </form>
                 <div className="Post" ref={ref}>
                     <div className="">
-                        <img src={LogoUNILAB} width="50%" alt="Logo Unilab"/>
+                        <img src={LogoUNILABPreto} width="50%" alt="Logo Unilab"/>
                         <h1>{this.state.nome}</h1>
                     </div>
                     <div className="table-responsive">
