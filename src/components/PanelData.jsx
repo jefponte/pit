@@ -19,34 +19,71 @@ class PanelData extends Component{
     constructor(props){
         super(props);
         this.state = {
-            data: []
+            codigo: "", 
+            disciplina: "", 
+            cargaHoraria: "",
+            tipo: null
+
         }
-        this.mudar = this.mudar.bind(this);
+        this.handleAdd = this.handleAdd.bind(this);
         this.onTagsChange = this.onTagsChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
-    mudar(){
+    handleAdd(){
         this.context.nome = "Teste";
         this.setState({nome: "Teste"})
 
     }
-    
-  onTagsChange = (event, values) => {
-    this.setState({
-      tipo: values
-    }, () => {
-      console.log(this.state);
-    });
-  }
+    handleChange(event){
+        const target = event.target,
+        value = target.type === 'checkbox' ? target.checked : target.value,
+        name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+        console.log(this.state);
+    }
+    onTagsChange = (event, values) => {
+        this.setState({
+        tipo: values
+        }, () => {
+        console.log(this.state);
+        });
+    }
 
 
 
 
     render(){
- 
+        const {state} = this;
         const formsData = [
             <>
-                <TextField value="" id="Disciplina" label="Disciplina" variant="outlined" fullWidth margin="normal"/>
-            </>,<>2</>,<>3</>,<>4</>,<>5</>, <>6</>, <>7</>];
+                <TextField value={state.codigo} name="codigo"  onChange={this.handleChange} id="codigo" label="Código" fullWidth variant="outlined" margin="normal"/>
+                <TextField value={state.disciplina} name="disciplina" onChange={this.handleChange} id="disciplina" label="Disciplina" fullWidth variant="outlined" margin="normal"/><br/>
+                <TextField value={state.cargaHoraria} name="cargaHoraria" onChange={this.handleChange} id="cargaHoraria" label="Carga Horária" fullWidth variant="outlined" margin="normal"/>
+                <Button onClick={this.handleAdd}  type="submit" variant="contained" color="primary">
+                    Adicionar
+                </Button>
+            </>,
+            <>
+            2
+            </>,
+            <>
+            3
+            </>,
+            <>
+            4
+            </>,
+            <>
+            5
+            </>, 
+            <>
+            6
+            </>, 
+            <>
+            7
+            </>];
         return (
         <>
                     {console.log(this.context)}
@@ -62,9 +99,8 @@ class PanelData extends Component{
                 />
                 
             {(this.state.tipo)?formsData[this.state.tipo.id]: "Selecione um tipo de Atividade." }
-            <Button onClick={this.mudar}  type="submit" variant="contained" color="primary">
-                Teste
-            </Button>
+            
+            
             </>);
     }
 }
