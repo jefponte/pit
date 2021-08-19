@@ -1,11 +1,13 @@
 
 import './App.css';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import Pagina404 from './pages/Pagina404';
 import Header from './components/Header';
 import Home from './pages/Home';
+import PagePIT from './pages/PagePIT';
+import Page404 from './pages/Page404';
 import Footer from './components/Footer';
-import FormPIT from './pages/FormPIT';
+
+
 
 function App() {
   return (
@@ -18,10 +20,10 @@ function App() {
             <Home/>
           </Route>
           <Route exact path='/pit/form'>
-           <FormPIT/>
+           <PagePIT/>
           </Route>
           <Route>
-            <Pagina404/>
+            <Page404/>
           </Route>
         </Switch>
         <Footer/>

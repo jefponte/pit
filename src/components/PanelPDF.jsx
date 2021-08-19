@@ -2,17 +2,25 @@ import React, {Component} from 'react';
 import Pdf from "react-to-pdf";
 import LogoUNILABPreto from '../assets/img/logo-unilab-preto.png';
 import {Button} from "@material-ui/core";
+import {DataContext} from '../services/DataContext';
+
 const ref = React.createRef();
 
 class PanelPDF extends Component{
+    static contextType = DataContext;
     constructor(props){
         super(props);
+        this.state = {
+            data: []
+        }
     }
+
     render(){
         return(
 
             <>
-               {console.log(this.props)}
+               {console.log(this.context)}
+               
                 <div className="Post" ref={ref}>
                     <div className="">
                         <img src={LogoUNILABPreto} width="50%" alt="Logo Unilab"/>
@@ -50,7 +58,7 @@ class PanelPDF extends Component{
 
                 <Pdf targetRef={ref} filename="post.pdf">
                     {({ toPdf }) => 
-                    <Button onClick={this.handlerAvancar}  type="submit" variant="contained" color="primary" onClick={toPdf}>
+                    <Button type="submit" variant="contained" color="primary" onClick={toPdf}>
                         Gerar PDF
                     </Button>}
                 </Pdf>

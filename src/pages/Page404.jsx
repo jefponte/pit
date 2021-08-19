@@ -1,7 +1,7 @@
 import React from 'react';
 import imagem from '../assets/img/404.png';
 
-const Pagina404 = () => {
+const Page404 = () => {
 
     return (
         <main>
@@ -12,4 +12,4 @@ const Pagina404 = () => {
         );
 
 }
-export default Pagina404;
+export default Page404;
