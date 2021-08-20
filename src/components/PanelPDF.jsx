@@ -31,25 +31,21 @@ class PanelPDF extends Component{
                         <table className="table table-bordered">
                             <thead>
                                 <tr>
-                                <th scope="col">Tipo de Atividade</th>
-                                <th scope="col">CH MÍN.</th>
-                                <th scope="col">CH MÁX.</th>
-                                <th scope="col">OBSERVAÇÕES</th>
+                                <th scope="col">Código</th>
+                                <th scope="col">Disciplina</th>
+                                <th scope="col">Horas Semanais</th>
+                                <th scope="col">Subtotal (x2)</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                                </tr>
+                                {this.context.data.map(atividade => 
+                                    <tr>
+                                        <th scope="row">{atividade.codigo}</th>
+                                        <td>{atividade.disciplina}</td>
+                                        <td>{atividade.cargaHoraria}</td>
+                                        <td>{atividade.cargaHoraria*2}</td>
+                                    </tr>
+                                    )}
 
                             </tbody>
                         </table>
