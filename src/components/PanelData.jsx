@@ -1,4 +1,4 @@
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField, Typography } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import React, {Component} from 'react';
 import {DataContext} from '../services/DataContext';
@@ -16,6 +16,8 @@ const tiposAtividade = [
 
 class PanelData extends Component{
     static contextType = DataContext;
+
+    
     constructor(props){
         super(props);
         this.state = {
@@ -24,15 +26,21 @@ class PanelData extends Component{
             cargaHoraria: "",
             tipo: null
 
-        }
+        };
         this.handleAdd = this.handleAdd.bind(this);
         this.onTagsChange = this.onTagsChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
     handleAdd(){
-        this.context.nome = "Teste";
-        this.setState({nome: "Teste"})
+        const hora = this.state;
+        this.context.data.push(hora);
+        this.setState({
+            codigo: "", 
+            disciplina: "", 
+            cargaHoraria: "",
+            tipo: null
 
+        });
     }
     handleChange(event){
         const target = event.target,
@@ -42,13 +50,10 @@ class PanelData extends Component{
         this.setState({
             [name]: value
         });
-        console.log(this.state);
     }
     onTagsChange = (event, values) => {
         this.setState({
-        tipo: values
-        }, () => {
-        console.log(this.state);
+            tipo: values
         });
     }
 
@@ -94,13 +99,18 @@ class PanelData extends Component{
                 options={tiposAtividade}
                 getOptionLabel={option => option.descricao}
                 onChange={this.onTagsChange}
+                value={this.state.tipo}
                 fullWidth
                 renderInput={(params) => <TextField {...params} label="Tipo de Atividade" variant="outlined" />}
                 />
                 
-            {(this.state.tipo)?formsData[this.state.tipo.id]: "Selecione um tipo de Atividade." }
+            {(this.state.tipo)?formsData[this.state.tipo.id]:(<Typography variant="h4" component="h2">Selecione uma atividade</Typography>)}
             
-            
+            <ul>
+            {
+                this.context.data.map(atividade => <li>{atividade.disciplina}</li>)
+            }
+            </ul>
             </>);
     }
 }

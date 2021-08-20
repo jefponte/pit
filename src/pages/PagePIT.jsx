@@ -14,7 +14,8 @@ class PagePIT extends Component{
             periodo: '',
             regime: '',
             ch: '',
-            etapa: 0
+            etapa: 0, 
+            data: []
         }
         this.handleStep = this.handleStep.bind(this);
         this.formStep = this.formStep.bind(this);
