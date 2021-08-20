@@ -3,15 +3,7 @@ import { Autocomplete } from '@material-ui/lab';
 import React, {Component} from 'react';
 import {DataContext} from '../services/DataContext';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import FolderIcon from '@material-ui/icons/Folder';
-import DeleteIcon from '@material-ui/icons/Delete';
+import Element from '../components/Element';
 
 const tiposAtividade = [
     { descricao: 'ENSINO DE GRADUAÇÃO', id: 0 },
@@ -40,10 +32,32 @@ class PanelData extends Component{
         this.handleAdd = this.handleAdd.bind(this);
         this.onTagsChange = this.onTagsChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.removeData = this.removeData.bind(this);
+    }
+    removeData(itemId){
+        console.log(itemId);
+
+        let arrayData =  this.context.data;
+        let dataIndex = arrayData.findIndex(atividade => atividade.id === itemId);
+        arrayData.splice(dataIndex, 1);
+        this.context.data = arrayData;
+
+        this.setState(
+            {
+                codigo: "", 
+                disciplina: "", 
+                cargaHoraria: "",
+                tipo: null});
+        //
+        
+        
+
     }
     handleAdd(){
         const hora = this.state;
-        this.context.data.push(hora);
+        const newHora = Object.assign({}, hora, {id:(Date.now())});
+
+        this.context.data.push(newHora);
         this.setState({
             codigo: "", 
             disciplina: "", 
@@ -101,7 +115,6 @@ class PanelData extends Component{
             </>];
         return (
         <>
-                    {console.log(this.context)}
 
 
            <Autocomplete
@@ -119,24 +132,10 @@ class PanelData extends Component{
 
             <List>
             {
-                this.context.data.map(atividade => 
+                this.context.data.map((atividade, index) => 
                 
-                    <ListItem>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <FolderIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={atividade.tipo.descricao}
-                      secondary={atividade.disciplina+" - "+atividade.cargaHoraria}
-                    />
-                    <ListItemSecondaryAction>
-                      <IconButton edge="end" aria-label="delete">
-                        <DeleteIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
+                    <Element atividade={atividade} removeData={this.removeData} key={index}/>
+                    
                     )
             }
             </List>

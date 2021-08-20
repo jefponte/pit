@@ -38,8 +38,8 @@ class PanelPDF extends Component{
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.context.data.map(atividade => 
-                                    <tr>
+                                {this.context.data.map((atividade, index) => 
+                                    <tr  key={index}>
                                         <th scope="row">{atividade.codigo}</th>
                                         <td>{atividade.disciplina}</td>
                                         <td>{atividade.cargaHoraria}</td>
