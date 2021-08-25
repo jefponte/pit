@@ -8,26 +8,22 @@ const ref = React.createRef();
 
 class PanelPDF extends Component{
     static contextType = DataContext;
-    constructor(props){
-        super(props);
-        this.state = {
-            data: []
-        }
-    }
 
     render(){
         return(
 
             <>
-               {console.log(this.context)}
-               
-                <div className="Post" ref={ref}>
-                    <div className="">
-                        <img src={LogoUNILABPreto} width="50%" alt="Logo Unilab"/>
-                        {this.props.data.nome}
+                <div className="Post"  ref={ref}>
+                    <div className="d-flex justify-content-center">
+                        <img src={LogoUNILABPreto} width="50%" alt="Logo Unilab"/><br/>
                     </div>
+                    <div className="">
+                        <h4>PLANO INDIVIDUAL DE TRABALHO PARA O SEMESTRE {this.context.periodo}</h4>
+                    </div>
+
+                    
                     <div className="table-responsive">
-                        <h4>PLANO INDIVIDUAL DE TRABALHO PARA O SEMESTRE 2021.1</h4>
+                        
                         <table className="table table-bordered">
                             <thead>
                                 <tr>
@@ -49,8 +45,11 @@ class PanelPDF extends Component{
 
                             </tbody>
                         </table>
+
                     </div>
                 </div>
+                
+
 
                 <Pdf targetRef={ref} filename="post.pdf">
                     {({ toPdf }) => 
