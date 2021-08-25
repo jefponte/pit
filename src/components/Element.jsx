@@ -31,7 +31,7 @@ class Element extends Component{
             </ListItemAvatar>
             <ListItemText
               primary={atividade.tipo.descricao}
-              secondary={atividade.disciplina+" - "+atividade.cargaHoraria}
+              secondary={atividade.disciplina+" - "+atividade.horasSemanais}
             />
             <ListItemSecondaryAction onClick={this.deleteItem.bind(this)}>
               <IconButton edge="end" aria-label="delete">

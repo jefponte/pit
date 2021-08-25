@@ -13,12 +13,10 @@ class PagePIT extends Component{
             siape: '',
             periodo: '',
             regime: '',
-            ch: '',
             etapa: 0, 
             data: []
         }
         this.handleStep = this.handleStep.bind(this);
-        this.formStep = this.formStep.bind(this);
     }
     handleStep(){
         if(this.state.etapa >= 3){
@@ -32,73 +30,29 @@ class PagePIT extends Component{
             etapa: novaEtapa
         });
     }
-
- 
     onChange = input => e => {
         this.setState({[input]: e.target.value});
     }
-    formStep(){
-        const etapa = this.state.etapa;
-        switch(etapa){
-            case 0:
-                return (
-                    <>
-                        <TextField value={this.state.nome} onChange={this.onChange('nome')} id="nome" label="Nome" variant="outlined" fullWidth margin="normal"/>
-                        <TextField value={this.state.siape} onChange={this.onChange('siape')} id="siape" label="SIAPE" variant="outlined" fullWidth margin="normal"/>
-
-                    </>
-
-                );
-
-            case 1:
-                return (
-                    <>
-                        <TextField value={this.state.periodo} onChange={this.onChange('periodo')} id="nome" label="Período Letivo" variant="outlined" fullWidth margin="normal"/>
-                        <TextField value={this.state.regime} onChange={this.onChange('regime')} id="regime" label="Regime de Trabalho" variant="outlined" fullWidth margin="normal"/>
-
-                    </>
-
-                );
-            
-            case 2:
-                return (
-                    <>
-                        
-
-                        <PanelData/>
-                        
-
-                    </>
-
-                );
-
-            case 3:
-                    return (
-                        <>
-                            <Typography variant="h4" component="h2">
-                            Verifique as informações e depois clique em Gerar PDF
-                            </Typography><br/><br/>
-                            
-                        </>
-    
-                    );
-    
-            default:
-                return (<>Erro</>);
-
-        }
-    }
-    showPanelPDF(){
-        if(this.state.etapa === 3){
-            return (
-                <>
-                    <PanelPDF data={{nome:this.state.nome}}/>
-                </>
-            );
-        }
-    }
+   
     render(){
         const {state} = this;
+        const formStep = [
+        <>
+            <TextField value={this.state.nome} onChange={this.onChange('nome')} id="nome" label="Nome" variant="outlined" fullWidth margin="normal"/>
+            <TextField value={this.state.siape} onChange={this.onChange('siape')} id="siape" label="SIAPE" variant="outlined" fullWidth margin="normal"/>
+        </>, 
+        <>
+            <TextField value={this.state.periodo} onChange={this.onChange('periodo')} id="nome" label="Período Letivo" variant="outlined" fullWidth margin="normal"/>
+            <TextField value={this.state.regime} onChange={this.onChange('regime')} id="regime" label="Regime de Trabalho" variant="outlined" fullWidth margin="normal"/>
+        </>, 
+        <>
+            <PanelData/>
+        </>,
+        <>
+            <Typography variant="h4" component="h2">
+            Verifique as informações e depois clique em Gerar PDF
+            </Typography><br/><br/>
+        </>];
         return (
 
             <Container maxWidth="sm">
@@ -109,11 +63,11 @@ class PagePIT extends Component{
                         <Step><StepLabel>Profissional</StepLabel></Step>
                         <Step><StepLabel>Carga Horária</StepLabel></Step>
                     </Stepper>
-                    {this.formStep()}
+                    {formStep[state.etapa]}
                     <Button onClick={this.handleStep}  type="submit" variant="contained" color="primary">
                         {state.etapa === 3 ? "Revisar" : "Avançar"}
                     </Button>
-                    {this.showPanelPDF()}
+                    {state.etapa === 3? <PanelPDF data={{nome:this.state.nome}}/> : ""}
                 </DataContext.Provider>
             </Container>
             

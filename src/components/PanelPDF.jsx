@@ -42,8 +42,8 @@ class PanelPDF extends Component{
                                     <tr  key={index}>
                                         <th scope="row">{atividade.codigo}</th>
                                         <td>{atividade.disciplina}</td>
-                                        <td>{atividade.cargaHoraria}</td>
-                                        <td>{atividade.cargaHoraria*2}</td>
+                                        <td>{atividade.horasSemanais}</td>
+                                        <td>{atividade.horasSemanais*2}</td>
                                     </tr>
                                     )}
 
