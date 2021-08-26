@@ -1,69 +1,40 @@
-import React, {Component} from 'react';
-import Pdf from "react-to-pdf";
+import React, { useContext } from 'react';
 import LogoUNILABPreto from '../assets/img/logo-unilab-preto.png';
 import {Button} from "@material-ui/core";
 import {DataContext} from '../services/DataContext';
+import { savePDF } from '@progress/kendo-react-pdf';
+import { useRef } from 'react';
 
-const ref = React.createRef();
 
-class PanelPDF extends Component{
-    static contextType = DataContext;
 
-    render(){
-        return(
+function PanelPDF()
+{
+    const contentArea = useRef(null);
+    const handleExportWithMethod = (event) => {
+        savePDF(contentArea.current, {paperSize: "A4"});
+    };
+    const contextType = useContext(DataContext);
 
-            <>
-                <div className="Post"  ref={ref}>
-                    <div className="d-flex justify-content-center">
-                        <img src={LogoUNILABPreto} width="50%" alt="Logo Unilab"/><br/>
-                    </div>
-                    <div className="">
-                        <h4>PLANO INDIVIDUAL DE TRABALHO PARA O SEMESTRE {this.context.periodo}</h4>
-                    </div>
+    return(
 
-                    
-                    <div className="table-responsive">
-                        
-                        <table className="table table-bordered">
-                            <thead>
-                                <tr>
-                                <th scope="col">Código</th>
-                                <th scope="col">Disciplina</th>
-                                <th scope="col">Horas Semanais</th>
-                                <th scope="col">Subtotal (x2)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.context.data.map((atividade, index) => 
-                                    <tr  key={index}>
-                                        <th scope="row">{atividade.codigo}</th>
-                                        <td>{atividade.disciplina}</td>
-                                        <td>{atividade.horasSemanais}</td>
-                                        <td>{atividade.horasSemanais*2}</td>
-                                    </tr>
-                                    )}
-
-                            </tbody>
-                        </table>
-
-                    </div>
+        <>
+            {console.log(contextType)}
+            <div className="Post"  ref={contentArea}>
+                <div className="d-flex justify-content-center">
+                    <img src={LogoUNILABPreto} width="50%" alt="Logo Unilab"/><br/>
+                </div>
+                <div className="">
+                    Teste
                 </div>
                 
-
-
-                <Pdf targetRef={ref} filename="post.pdf">
-                    {({ toPdf }) => 
-                    <Button type="submit" variant="contained" color="primary" onClick={toPdf}>
-                        Gerar PDF
-                    </Button>}
-                </Pdf>
-
-            </>
+            </div>
+            <Button type="submit" variant="contained" color="primary" onClick={handleExportWithMethod}>
+                Gerar PDF
+            </Button>
+        </>
 
 
 
-        );
-    }
-
+    );
 }
 export default PanelPDF;

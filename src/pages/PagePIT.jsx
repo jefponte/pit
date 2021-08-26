@@ -67,7 +67,7 @@ class PagePIT extends Component{
                     <Button onClick={this.handleStep}  type="submit" variant="contained" color="primary">
                         {state.etapa === 3 ? "Revisar" : "Avançar"}
                     </Button>
-                    {state.etapa === 3? <PanelPDF data={{nome:this.state.nome}}/> : ""}
+                    {state.etapa === 3? <PanelPDF/> : ""}
                 </DataContext.Provider>
             </Container>
             
