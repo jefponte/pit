@@ -16,7 +16,8 @@ const tiposAtividade = [
     { descricao: "ATIVIDADES DE GESTÃO", id: 5 },
     { descricao: 'OUTRAS ATIVIDADES RELEVANTES', id: 6 }
 ];
-function showTable12(data){
+
+function showTable01(data){
     return (<>
 <div className="table-responsive">
     <table className="table table-bordered">
@@ -43,12 +44,109 @@ function showTable12(data){
     
     </>);
 }
+
+function showTable2(data){
+    return (<>
+<div className="table-responsive">
+    <table className="table table-bordered">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Programa</th>
+                <th>Horas semanais</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {data.map((element, index) => 
+                <tr key={index}>
+                    <td>{element.tipoFuncao.sigla}</td>
+                    <td>{element.programa}</td>
+                    <td>{element.horasSemanais}</td>
+                    <td>{element.horasSemanais}</td>
+                </tr>)
+            }         
+        </tbody>
+    </table>   
+</div>
+    
+    </>);
+}
+
+function showTable34(data){
+    return (<>
+<div className="table-responsive">
+    <table className="table table-bordered">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Data de Aprovação</th>
+                <th>Título</th>
+                <th>Horas Semanais</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {data.map((element, index) => 
+                <tr key={index}>
+                    <td>{element.tipoFuncao.sigla}</td>
+                    <td>{element.dataAprovacao}</td>
+                    <td>{element.titulo}</td>
+                    <td>{element.horasSemanais}</td>
+                    <td>{element.horasSemanais}</td>
+                </tr>)
+            }         
+        </tbody>
+    </table>   
+</div>
+    
+    </>);
+}
+function showTable56(data){
+    return (<>
+<div className="table-responsive">
+    <table className="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nº da Portaria</th>
+                <th>Data</th>
+                <th>Cargo ou função</th>
+                <th>Horas Semanais</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {data.map((element, index) => 
+                <tr key={index}>
+                    <td>{element.numeroPortaria}</td>
+                    <td>{element.data}</td>
+                    <td>{element.cargoFuncao}</td>
+                    <td>{element.horasSemanais}</td>
+                    <td>{element.horasSemanais}</td>
+                </tr>)
+            }         
+        </tbody>
+    </table>   
+</div>
+    
+    </>);
+}
 function showTableByType(data, idTipo){
     switch(idTipo){
         case 0:
-            return showTable12(data);
+            return showTable01(data);
         case 1: 
-            return showTable12(data);
+            return showTable01(data);
+        case 2:
+            return showTable2(data);
+        case 3: 
+            return showTable34(data);
+        case 4:
+            return showTable34(data);
+        case 5:
+            return showTable56(data);
+        case 6:
+            return showTable56(data);
         default: 
             console.log("Desenvolvendo");
     }
@@ -60,6 +158,9 @@ function showData(data, idTipo){
             dataPrint.push(element);
         }
     });
+    if(dataPrint.length === 0){
+        return (<></>);
+    }
 
     return(
     <>
@@ -84,10 +185,18 @@ function PanelPDF()
                     <img src={LogoUNILABPreto} width="50%" alt="Logo Unilab"/><br/>
                 </div>
                 <div className="">
-                    Docente: {contextType.nome} | SIAPE: {contextType.siape}
+                    <br/>
+                    <p>PLANO INDIVIDUAL DE TRABALHO PARA O SEMESTRE {contextType.periodo}</p>
+                    <p>Docente: {contextType.nome} | SIAPE: {contextType.siape}</p>
+                    <br/>
                 </div>
                 {showData(contextType, 0)}
                 {showData(contextType, 1)}
+                {showData(contextType, 2)}
+                {showData(contextType, 3)}
+                {showData(contextType, 4)}
+                {showData(contextType, 5)}
+                {showData(contextType, 6)}
             </div>
             <Button type="submit" variant="contained" color="primary" onClick={handleExportWithMethod}>
                 Gerar PDF
