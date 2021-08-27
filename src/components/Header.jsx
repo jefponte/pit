@@ -1,36 +1,36 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import { AppBar, Toolbar } from '@material-ui/core';
+import React from 'react';
 import LogoUNILAB from '../assets/img/logo-unilab.png';
-import LogoDTI from '../assets/img/logodti.png';
-
-class Header extends Component{
-
-    render(){
-        return(
-         
-    <header className="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-      <a href="/" className="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-        <img width="213" src={LogoUNILAB} alt="Logo UNILAB" />
-      </a>
-
-      <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><Link to="/pit/"  className="nav-link px-2 text-white">Home</Link></li>
-        <li><Link  to="/pit/form" className="nav-link px-2 text-white">Formulário</Link></li>
-      </ul>
-
-      <div className="col-md-3 text-end">
-        <img width="213" src={LogoDTI} alt="Logo UNILAB"/>
-      </div>
-    </header>
+import { makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 
 
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
 
+const Header = () => {
+  const classes = useStyles();
+  return(
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <img width="213" src={LogoUNILAB} alt="Logo UNILAB" />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+    </div>
 
-
-
-        );
-    }
-
+  );
 }
 export default Header;

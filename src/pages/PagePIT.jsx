@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import PanelData from '../components/PanelData';
 import PanelPDF from '../components/PanelPDF';
 import {DataContext} from '../services/DataContext';
-
+import resolucao from  '../doc/resolucao.pdf';
 
 class PagePIT extends Component{
     constructor(props){
@@ -56,8 +56,18 @@ class PagePIT extends Component{
         return (
 
             <Container maxWidth="sm">
-                <DataContext.Provider value={state}>
-                   
+                <DataContext.Provider value={state}><br/>
+                    <Typography component="h1" variant="h4" align="center" color="textPrimary" gutterBottom>
+                            Plano Individual de Trabalho (PIT)
+                    </Typography>
+                    <Typography variant="h5" align="center" color="textSecondary" paragraph>
+                            Semestralmente, cada docente apresentará
+                            ao seu instituto de lotação e de exercício,
+                            para aprovação e em data por este fixada,
+                            o seu Plano Individual de Trabalho (PIT).
+                    </Typography>
+                    <p><a href={resolucao}>Download da resolução</a></p>
+
                     <Stepper activeStep={state.etapa}>
                         <Step><StepLabel>Pessoal</StepLabel></Step>
                         <Step><StepLabel>Profissional</StepLabel></Step>

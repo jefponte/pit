@@ -1,19 +1,29 @@
+import { Typography } from '@material-ui/core';
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 
+const useStyles = makeStyles((theme) => ({
+    
+    footer: {
+      backgroundColor: theme.palette.background.paper,
+      padding: theme.spacing(6),
+      
+    },
+  }));
+  
 const Footer = () => {
-
+    const classes = useStyles();
     return (
+        <footer className={classes.footer}>
+        <Typography variant="h6" align="center" gutterBottom>
+            UNILAB - Universidade da Integração Internacional da Lusofonia Afro-Brasileira
+        </Typography>
+        <Typography variant="subtitle1" align="center" component="p">
+            DTI - Diretoria de Tecnologia da Informação
+        </Typography>
         
-        <div className="container">
-            <footer className="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-                <div className="nav col-md-4 justify-content-end list-unstyled d-flex">
-                    <span className="text-muted">UNILAB - Universidade da Integração Internacional da Lusofonia Afro-Brasileira</span>
-                </div>
-                <div className="col-md-4 d-flex align-items-center">
-                    <span className="text-muted">DTI - Diretoria de Tecnologia da Informação</span>
-                </div>
-            </footer>
-        </div>
+      </footer>   
+        
         );
 
 }

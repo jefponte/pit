@@ -1,4 +1,4 @@
-import { Button, TextField, Typography } from '@material-ui/core';
+import { Button, Table, TableBody, TableContainer, TableHead, TableRow, TableCell,  TextField, Typography } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import React, {Component} from 'react';
 import {DataContext} from '../services/DataContext';
@@ -248,6 +248,7 @@ class PanelData extends Component{
                 
             {(this.state.tipo)?formsData[this.state.tipo.id]:(<Typography variant="h4" component="h2">Selecione uma atividade</Typography>)}
             
+
 
             <List>
             {
