@@ -1,91 +1,69 @@
 import { TextField, Button } from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
 import React, { useState } from "react";
+const periodos = [{ descricao: "2021.1" }, { descricao: "2021.2" }];
+const regimes = [
+  { descricao: "40 horas" },
+  { descricao: "30 horas" },
+  { descricao: "20 horas" },
+];
 
 function DataProfessional({ aoEnviar, defaultData }) {
   const [periodo, setPeriodo] = useState(defaultData.periodo);
   const [regime, setRegime] = useState(defaultData.regime);
-  const [erros, setErros] = useState({
-    periodo: { valido: true, texto: "" },
-    regime: { valido: true, texto: "" },
-  });
 
-  function possoEnviar() {
-    for (let campo in erros) {
-      if (!erros[campo].valido) {
-        return false;
-      }
-    }
-    return true;
-  }
-  function validarPeriodo(event) {
-    const { name, value } = event.target;
-    const novoEstado = { ...erros };
-    if (value.length < 5) {
-      novoEstado[name] = {
-        valido: false,
-        texto: "O período deve ter ao menos 5 dígitos.",
-      };
-    } else {
-      novoEstado[name] = { valido: true, texto: "" };
-    }
-    setErros(novoEstado);
-  }
-  function validarRegime(event) {
-    const { name, value } = event.target;
-    const novoEstado = { ...erros };
-    if (value > 10 && value < 50) {
-        novoEstado[name] = { valido: true, texto: "" };
-      
-    } else {
-        novoEstado[name] = {
-            valido: false,
-            texto: "Digite um regime de trabalho válido.",
-          };
-    }
-    setErros(novoEstado);
-  }
+
+  const handleChangePeriodo = (event, values) => {
+    setPeriodo(values);
+  };
+  const handleChangeRegime = (event, values) => {
+    setRegime(values);
+  };
+
+
   return (
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        if (possoEnviar()) {
-          aoEnviar({ periodo, regime });
-        }
+        aoEnviar({ periodo, regime });
       }}
     >
-      <TextField
-        required
-        onBlur={validarPeriodo}
-        error={!erros.periodo.valido}
-        helperText={erros.periodo.texto}
-        value={periodo}
-        onChange={(event) => {
-            setPeriodo(event.target.value);
-        }}
-        name="periodo"
+      <Autocomplete
         id="periodo"
-        label="Período Letivo"
-        variant="outlined"
+        name="periodo"
+        options={periodos}
+        getOptionLabel={(option) => option.descricao}
+        onChange={handleChangePeriodo}
+        value={periodo}
         fullWidth
-        margin="normal"
+        renderInput={(params) => (
+          <TextField
+            required
+            {...params}
+            label="Período Letivo"
+            variant="outlined"
+          />
+        )}
       />
-      <TextField
-        required
-        onBlur={validarRegime}
-        error={!erros.regime.valido}
-        helperText={erros.regime.texto}
-        value={regime}
-        onChange={(event) => {
-            setRegime(event.target.value);
-        }}
-        type="number"
-        name="regime"
+      <br />
+      <Autocomplete
         id="regime"
-        label="Regime de Trabalho"
-        variant="outlined"
+        name="regime"
+        options={regimes}
+        getOptionLabel={(option) => option.descricao}
+        onChange={handleChangeRegime}
+        value={regime}
         fullWidth
-        margin="normal"
-      />
+        renderInput={(params) => (
+          <TextField
+            required
+            {...params}
+            label="Período Letivo"
+            variant="outlined"
+          />
+        )}
+      /><br/>
+
       <Button type="submit" variant="contained" color="primary">
         Avançar
       </Button>

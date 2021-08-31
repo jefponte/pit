@@ -180,7 +180,7 @@ function PanelPDF({ aoEnviar }) {
     savePDF(contentArea.current, { paperSize: "A4" });
   };
   const contextType = useContext(DataContext);
-
+  console.log(contextType);
   return (
     <>
       <Typography variant="h4" component="h2">
@@ -204,7 +204,7 @@ function PanelPDF({ aoEnviar }) {
         <div className="">
           <br />
           <p>
-            PLANO INDIVIDUAL DE TRABALHO PARA O SEMESTRE {contextType.periodo}
+            PLANO INDIVIDUAL DE TRABALHO PARA O SEMESTRE {contextType.periodo.descricao}
           </p>
           <p>
             Docente: {contextType.nome} | SIAPE: {contextType.siape}

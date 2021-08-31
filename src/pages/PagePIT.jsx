@@ -19,8 +19,8 @@ class PagePIT extends Component {
     this.state = {
       nome: "",
       siape: "",
-      periodo: "",
-      regime: "",
+      periodo: null,
+      regime: null,
       etapa: 0,
       data: [],
     };
