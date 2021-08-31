@@ -2,9 +2,9 @@ import { Button, TextField } from "@material-ui/core";
 import React from "react";
 import { useState } from "react";
 
-function DataUser({ aoEnviar }) {
-  const [nome, setNome] = useState("");
-  const [siape, setSiape] = useState("");
+function DataUser({ aoEnviar, defaultData }) {
+  const [nome, setNome] = useState(defaultData.nome);
+  const [siape, setSiape] = useState(defaultData.siape);
   const [erros, setErros] = useState({
     siape: { valido: true, texto: "" },
     nome: { valido: true, texto: "" },

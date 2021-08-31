@@ -47,8 +47,8 @@ class PagePIT extends Component {
   render() {
     const { state } = this;
     const formStep = [
-        <DataUser aoEnviar={this.handleStep} />,
-        <DataProfessional  aoEnviar={this.handleStep}/>,
+        <DataUser aoEnviar={this.handleStep} defaultData={{nome: this.state.nome, siape: this.state.siape}}/>,
+        <DataProfessional  aoEnviar={this.handleStep} defaultData={{periodo: this.state.periodo, regime: this.state.regime}}/>,
         <PanelData aoEnviar={this.handleStep}/>,
         <PanelPDF  aoEnviar={this.handleStep}/>
     ];

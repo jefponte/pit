@@ -1,9 +1,9 @@
 import { TextField, Button } from "@material-ui/core";
 import React, { useState } from "react";
 
-function DataProfessional({ aoEnviar }) {
-  const [periodo, setPeriodo] = useState("");
-  const [regime, setRegime] = useState("");
+function DataProfessional({ aoEnviar, defaultData }) {
+  const [periodo, setPeriodo] = useState(defaultData.periodo);
+  const [regime, setRegime] = useState(defaultData.regime);
   const [erros, setErros] = useState({
     periodo: { valido: true, texto: "" },
     regime: { valido: true, texto: "" },
