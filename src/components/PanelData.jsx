@@ -259,6 +259,16 @@ class PanelData extends Component{
                     )
             }
             </List>
+
+            <form  onSubmit={(event) => {
+                    event.preventDefault();
+                this.props.aoEnviar();
+      }}>
+                
+                <Button type="submit" variant="contained" color="primary">
+                    Avançar
+                </Button>
+            </form>
             </>);
     }
 }
