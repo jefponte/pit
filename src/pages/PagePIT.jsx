@@ -1,5 +1,4 @@
 import {
-
   Container,
   Step,
   StepLabel,
@@ -28,7 +27,7 @@ class PagePIT extends Component {
     this.handleStep = this.handleStep.bind(this);
   }
   handleStep(dados) {
-    this.setState({...this.state, ...dados});
+    this.setState({ ...this.state, ...dados });
     if (this.state.etapa >= 3) {
       this.setState({
         etapa: 0,
@@ -47,10 +46,16 @@ class PagePIT extends Component {
   render() {
     const { state } = this;
     const formStep = [
-        <DataUser aoEnviar={this.handleStep} defaultData={{nome: this.state.nome, siape: this.state.siape}}/>,
-        <DataProfessional  aoEnviar={this.handleStep} defaultData={{periodo: this.state.periodo, regime: this.state.regime}}/>,
-        <PanelData aoEnviar={this.handleStep}/>,
-        <PanelPDF  aoEnviar={this.handleStep}/>
+      <DataUser
+        aoEnviar={this.handleStep}
+        defaultData={{ nome: this.state.nome, siape: this.state.siape }}
+      />,
+      <DataProfessional
+        aoEnviar={this.handleStep}
+        defaultData={{ periodo: this.state.periodo, regime: this.state.regime }}
+      />,
+      <PanelData aoEnviar={this.handleStep} />,
+      <PanelPDF aoEnviar={this.handleStep} />,
     ];
     return (
       <Container maxWidth="sm">
@@ -71,7 +76,7 @@ class PagePIT extends Component {
             color="textSecondary"
             paragraph
           >
-            Utilize o formulário abaixo para gerar o PIT. 
+            Utilize o formulário abaixo para gerar o PIT.
           </Typography>
           <p>
             <a href={resolucao}>Download da resolução</a>
