@@ -25,17 +25,16 @@ function valuetext(value) {
   return `${value}h`;
 }
 
-export default function Range() {
+export default function Range({tipo}) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Typography id="discrete-slider-always" gutterBottom>
-        1. Ensino de Graduação
+      <Typography gutterBottom>
+        {tipo.descricao}
       </Typography><br/><br/>
       <Slider
-      
-        max={20}
+        max={tipo.maximo}
         defaultValue={0}
         getAriaValueText={valuetext}
         aria-labelledby="discrete-slider-always"

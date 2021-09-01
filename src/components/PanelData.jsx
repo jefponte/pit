@@ -25,13 +25,14 @@ const programas = [
 ];
 
 const tiposAtividade = [
-  { descricao: "ENSINO DE GRADUAÇÃO", id: 0 },
-  { descricao: "ENSINO DE PÓS-GRADUAÇÃO STRICTO SENSU E LATO SENSU", id: 1 },
-  { descricao: "ATIVIDADES COMPLEMENTARES DE ENSINO", id: 2 },
-  { descricao: "PROGRAMAS E PROJETOS DE PESQUISA", id: 3 },
-  { descricao: "PROGRAMAS E PROJETOS DE EXTENSÃO", id: 4 },
-  { descricao: "ATIVIDADES DE GESTÃO", id: 5 },
-  { descricao: "OUTRAS ATIVIDADES RELEVANTES", id: 6 },
+  { descricao: "ENSINO DE GRADUAÇÃO", id: 0, minimo: 4, maximo: 20 },
+  { descricao: "ENSINO DE PÓS-GRADUAÇÃO STRICTO SENSU", id: 7, minimo: 0, maximo: 16 },
+  { descricao: "ENSINO DE PÓS-GRADUAÇÃO STRICTO LATO SENSU", id: 1, minimo: 0, maximo: 16},
+  { descricao: "ATIVIDADES COMPLEMENTARES DE ENSINO", id: 2, minimo: 8, maximo: 20},
+  { descricao: "PROGRAMAS E PROJETOS DE PESQUISA", id: 3, minimo: 8, maximo: 20},
+  { descricao: "PROGRAMAS E PROJETOS DE EXTENSÃO", id: 4 , minimo: 8, maximo: 20},
+  { descricao: "ATIVIDADES DE GESTÃO", id: 5, minimo: 8, maximo: 40 },
+  { descricao: "OUTRAS ATIVIDADES RELEVANTES", id: 6, minimo: 8, maximo: 20 },
 ];
 
 class PanelData extends Component {
@@ -520,7 +521,9 @@ class PanelData extends Component {
             />
           ))}
         </List>
-        <Range/>
+        {tiposAtividade.map((element, index)=> {
+            
+        })}
 
         <form
           onSubmit={(event) => {
