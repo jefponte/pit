@@ -3,9 +3,9 @@ import { Autocomplete } from "@material-ui/lab";
 import React, { useState } from "react";
 const periodos = [{ descricao: "2021.1" }, { descricao: "2021.2" }];
 const regimes = [
-  { descricao: "40 horas" },
-  { descricao: "30 horas" },
   { descricao: "20 horas" },
+  { descricao: "40 horas" },
+  { descricao: "40 horas DE" },
 ];
 
 function DataProfessional({ aoEnviar, defaultData }) {
