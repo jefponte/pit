@@ -180,7 +180,6 @@ function PanelPDF({ aoEnviar }) {
     savePDF(contentArea.current, { paperSize: "A4" });
   };
   const contextType = useContext(DataContext);
-  console.log(contextType);
   return (
     <>
       <Typography variant="h4" component="h2">

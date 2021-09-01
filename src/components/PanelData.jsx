@@ -310,6 +310,7 @@ class PanelData extends Component {
       <>
         <br />
         <Autocomplete
+        
           id="tipoFuncao"
           options={tiposForm4}
           getOptionLabel={(option) => option.descricao}
@@ -317,10 +318,12 @@ class PanelData extends Component {
           value={this.state.tipoFuncao}
           fullWidth
           renderInput={(params) => (
-            <TextField {...params} label="Tipo" variant="outlined" />
+            <TextField required {...params} label="Tipo" variant="outlined" />
           )}
         />
         <TextField
+        required
+        type="date"
           value={state.dataAprovacao}
           name="dataAprovacao"
           onChange={this.handleChange}
@@ -329,9 +332,13 @@ class PanelData extends Component {
           fullWidth
           variant="outlined"
           margin="normal"
+          InputLabelProps={{
+            shrink: true,
+          }}
         />
         <br />
         <TextField
+            required
           value={state.titulo}
           name="titulo"
           onChange={this.handleChange}
@@ -342,6 +349,8 @@ class PanelData extends Component {
           margin="normal"
         />
         <TextField
+            required
+            type="number"
           value={state.horasSemanais}
           name="horasSemanais"
           onChange={this.handleChange}
@@ -358,6 +367,7 @@ class PanelData extends Component {
       <>
         <br />
         <TextField
+        required
           value={state.numeroPortaria}
           name="numeroPortaria"
           onChange={this.handleChange}
@@ -369,6 +379,8 @@ class PanelData extends Component {
         />
         <br />
         <TextField
+        required
+        type="date"
           value={state.data}
           name="data"
           onChange={this.handleChange}
@@ -377,8 +389,12 @@ class PanelData extends Component {
           fullWidth
           variant="outlined"
           margin="normal"
+          InputLabelProps={{
+            shrink: true,
+          }}
         />
         <TextField
+        required
           value={state.cargoFuncao}
           name="cargoFuncao"
           onChange={this.handleChange}
@@ -389,6 +405,8 @@ class PanelData extends Component {
           margin="normal"
         />
         <TextField
+        required
+        type="number"
           value={state.horasSemanais}
           name="horasSemanais"
           onChange={this.handleChange}
@@ -405,6 +423,7 @@ class PanelData extends Component {
       <>
         <br />
         <TextField
+        required
           value={state.numeroPortaria}
           name="numeroPortaria"
           onChange={this.handleChange}
@@ -416,6 +435,11 @@ class PanelData extends Component {
         />
         <br />
         <TextField
+        required
+        type="date"
+        InputLabelProps={{
+            shrink: true,
+          }}
           value={state.data}
           name="data"
           onChange={this.handleChange}
@@ -426,6 +450,7 @@ class PanelData extends Component {
           margin="normal"
         />
         <TextField
+        required
           value={state.cargoFuncao}
           name="cargoFuncao"
           onChange={this.handleChange}
@@ -436,6 +461,8 @@ class PanelData extends Component {
           margin="normal"
         />
         <TextField
+        required
+        type="number"
           value={state.horasSemanais}
           name="horasSemanais"
           onChange={this.handleChange}

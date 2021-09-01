@@ -58,7 +58,7 @@ function DataProfessional({ aoEnviar, defaultData }) {
           <TextField
             required
             {...params}
-            label="Período Letivo"
+            label="Regime de Trabalho"
             variant="outlined"
           />
         )}
