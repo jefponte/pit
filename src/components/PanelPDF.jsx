@@ -61,7 +61,7 @@ function showTable2(data) {
             {data.map((element, index) => (
               <tr key={index}>
                 <td>{element.tipoFuncao.sigla}</td>
-                <td>{element.programa}</td>
+                <td>{element.programa.descricao}</td>
                 <td>{element.horasSemanais}</td>
                 <td>{element.horasSemanais}</td>
               </tr>
