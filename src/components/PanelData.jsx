@@ -55,6 +55,7 @@ class PanelData extends Component {
     this.handleAdd = this.handleAdd.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.removeData = this.removeData.bind(this);
+    this.form1 = this.form1.bind(this);
   }
   removeData(itemId) {
     console.log(itemId);
@@ -138,89 +139,60 @@ class PanelData extends Component {
       programa: values,
     });
   };
-
+  
+  form1(){
+      const state = this.state;
+      return(<>
+      
+      <TextField
+          required
+          value={state.codigo}
+          name="codigo"
+          onChange={this.handleChange}
+          id="codigo"
+          label="Código"
+          fullWidth
+          variant="outlined"
+          margin="normal"
+        />
+        <TextField
+          required
+          value={state.disciplina}
+          name="disciplina"
+          onChange={this.handleChange}
+          id="disciplina"
+          label="Disciplina"
+          fullWidth
+          variant="outlined"
+          margin="normal"
+        />
+        <br />
+        <TextField
+          required
+          value={state.horasSemanais}
+          type="number"
+          name="horasSemanais"
+          onChange={this.handleChange}
+          id="horasSemanais"
+          label="Carga Horária"
+          fullWidth
+          variant="outlined"
+          margin="normal"
+        />
+        <Button type="submit" variant="contained" color="primary">
+          Adicionar
+        </Button>
+      </>);
+  }
   render() {
     const { state } = this;
     const formsData = [
       <>
-        <TextField
-          required
-          value={state.codigo}
-          name="codigo"
-          onChange={this.handleChange}
-          id="codigo"
-          label="Código"
-          fullWidth
-          variant="outlined"
-          margin="normal"
-        />
-        <TextField
-          required
-          value={state.disciplina}
-          name="disciplina"
-          onChange={this.handleChange}
-          id="disciplina"
-          label="Disciplina"
-          fullWidth
-          variant="outlined"
-          margin="normal"
-        />
-        <br />
-        <TextField
-          required
-          value={state.horasSemanais}
-          type="number"
-          name="horasSemanais"
-          onChange={this.handleChange}
-          id="horasSemanais"
-          label="Carga Horária"
-          fullWidth
-          variant="outlined"
-          margin="normal"
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Adicionar
-        </Button>
+      {this.form1()}
+        
       </>,
       <>
-        <TextField
-          required
-          value={state.codigo}
-          name="codigo"
-          onChange={this.handleChange}
-          id="codigo"
-          label="Código"
-          fullWidth
-          variant="outlined"
-          margin="normal"
-        />
-        <TextField
-          required
-          value={state.disciplina}
-          name="disciplina"
-          onChange={this.handleChange}
-          id="disciplina"
-          label="Disciplina"
-          fullWidth
-          variant="outlined"
-          margin="normal"
-        />
-        <br />
-        <TextField
-          required
-          value={state.horasSemanais}
-          type="number"
-          name="horasSemanais"
-          onChange={this.handleChange}
-          id="horasSemanais"
-          label="Carga Horária"
-          fullWidth
-          variant="outlined"
-          margin="normal"
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Adicionar
-        </Button>
+      {this.form1()}
       </>,
       <>
         <br />
@@ -289,10 +261,11 @@ class PanelData extends Component {
           value={this.state.tipoFuncao}
           fullWidth
           renderInput={(params) => (
-            <TextField {...params} label="Tipo" variant="outlined" />
+            <TextField required {...params} label="Tipo" variant="outlined" />
           )}
         />
         <TextField
+        required
           type="date"
           value={state.dataAprovacao}
           name="dataAprovacao"
@@ -308,6 +281,7 @@ class PanelData extends Component {
         />
         <br />
         <TextField
+            required
           value={state.titulo}
           name="titulo"
           onChange={this.handleChange}
@@ -318,6 +292,8 @@ class PanelData extends Component {
           margin="normal"
         />
         <TextField
+        required
+        type="number"
           value={state.horasSemanais}
           name="horasSemanais"
           onChange={this.handleChange}
