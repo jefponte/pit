@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import { DataContext } from "../services/DataContext";
 import List from "@material-ui/core/List";
 import Element from "../components/Element";
+import Range from "./Range";
 
 const tiposForm3 = [
   { descricao: "Tutoria", sigla: "T" },
@@ -519,6 +520,7 @@ class PanelData extends Component {
             />
           ))}
         </List>
+        <Range/>
 
         <form
           onSubmit={(event) => {
