@@ -1,7 +1,7 @@
 import { TextField, Button } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React, { useState } from "react";
-const periodos = [{ descricao: "2021.1" }, { descricao: "2021.2" }, { descricao: "2022.1" }, { descricao: "2022.2" }];
+const periodos = [{ descricao: "2021.1" }];
 const regimes = [
   { descricao: "20 horas" },
   { descricao: "40 horas" },
@@ -9,7 +9,7 @@ const regimes = [
 ];
 
 function DataProfessional({ aoEnviar, defaultData }) {
-  const [periodo, setPeriodo] = useState(defaultData.periodo);
+  const [periodo, setPeriodo] = useState({ descricao: "2021.1" });
   const [regime, setRegime] = useState(defaultData.regime);
 
 
@@ -30,6 +30,7 @@ function DataProfessional({ aoEnviar, defaultData }) {
     >
       <Autocomplete
         id="periodo"
+        defaultValue={{ descricao: "2021.1" }}
         name="periodo"
         options={periodos}
         getOptionLabel={(option) => option.descricao}

@@ -21,9 +21,40 @@ class Element extends Component{
     }
     render(){
         const atividade = this.props.atividade;
+        let descricaoExibir = "";
+        switch(atividade.tipo.id){
+          case 1:
+            descricaoExibir = atividade.disciplina; 
+            break;
+          case 2:
+            descricaoExibir = atividade.disciplina; 
+            break;
+            
+          case 3:
+            descricaoExibir = atividade.titulo;
+            break;
+          case 4:
+            descricaoExibir = atividade.titulo;
+            break;
+          case 5:
+            descricaoExibir = atividade.cargoFuncao;
+            break;
+          case 6:
+              descricaoExibir = atividade.cargoFuncao;
+              break;
+          case 2:
+            descricaoExibir = atividade.programa.descricao; 
+            break;
+          default:
+            descricaoExibir = ""; 
+            break;
+        }
+       
         return(
         
-            <ListItem>
+            <ListItem
+            button
+            >
             <ListItemAvatar>
               <Avatar>
                 <FolderIcon />
@@ -31,7 +62,7 @@ class Element extends Component{
             </ListItemAvatar>
             <ListItemText
               primary={atividade.tipo.descricao}
-              secondary={atividade.disciplina+" - "+atividade.horasSemanais}
+              secondary={descricaoExibir+" - "+atividade.horasSemanais}
             />
             <ListItemSecondaryAction onClick={this.deleteItem.bind(this)}>
               <IconButton edge="end" aria-label="delete">

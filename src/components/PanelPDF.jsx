@@ -16,6 +16,12 @@ const tiposAtividade = [
 ];
 
 function showTable01(data) {
+
+  let subtotal = 0;
+  data.map(function(element) {
+    return subtotal += parseInt(element.horasSemanais);
+  });
+
   return (
     <>
       <div className="table-responsive">
@@ -34,9 +40,10 @@ function showTable01(data) {
                 <td>{element.codigo}</td>
                 <td>{element.disciplina}</td>
                 <td>{element.horasSemanais}</td>
-                <td>{element.horasSemanais * 2}</td>
+                <td>-</td>
               </tr>
             ))}
+            <tr><th>Subtotal (x2)</th><td>-</td><td>-</td><td>{subtotal*2}</td></tr>
           </tbody>
         </table>
       </div>
@@ -45,6 +52,11 @@ function showTable01(data) {
 }
 
 function showTable2(data) {
+  let subtotal = 0;
+  data.map(function(element) {
+    return subtotal += parseInt(element.horasSemanais);
+  });
+
   return (
     <>
       <div className="table-responsive">
@@ -66,6 +78,7 @@ function showTable2(data) {
                 <td>{element.horasSemanais}</td>
               </tr>
             ))}
+            <tr><th>Subtotal</th><td>-</td><td>-</td><td>{subtotal}</td></tr>
           </tbody>
         </table>
       </div>
@@ -74,6 +87,10 @@ function showTable2(data) {
 }
 
 function showTable34(data) {
+  let subtotal = 0;
+  data.map(function(element) {
+    return subtotal += parseInt(element.horasSemanais);
+  });
   return (
     <>
       <div className="table-responsive">
@@ -97,6 +114,7 @@ function showTable34(data) {
                 <td>{element.horasSemanais}</td>
               </tr>
             ))}
+            <tr><th>Subtotal</th><td>-</td><td>-</td><td>{subtotal}</td></tr>
           </tbody>
         </table>
       </div>
@@ -104,6 +122,10 @@ function showTable34(data) {
   );
 }
 function showTable56(data) {
+  let subtotal = 0;
+  data.map(function(element) {
+    return subtotal += parseInt(element.horasSemanais);
+  });
   return (
     <>
       <div className="table-responsive">
@@ -127,13 +149,90 @@ function showTable56(data) {
                 <td>{element.horasSemanais}</td>
               </tr>
             ))}
+            <tr><th>Subtotal</th><td>-</td><td>-</td><td>{subtotal}</td></tr>
           </tbody>
         </table>
       </div>
     </>
   );
 }
+function showtotalData(data){
+  
+  let subtotal = 0;
+  data.map(function(element) {
+    if(element.tipo.id === 0 || element.tipo.id === 1){
+
+      subtotal += 2*parseInt(element.horasSemanais);
+    }else{
+
+      subtotal += parseInt(element.horasSemanais);
+    }
+    return subtotal;
+    
+  });
+  return (
+    <>
+      <div className="table-responsive">
+        <table className="table table-bordered">
+          
+          <tbody>
+            <tr><th>Carga Horária Semanal Total</th><td>{subtotal} horas</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+
+}
+function showTableError(contextType){
+  const data = contextType.data;
+  let subtotal = 0;
+  const erros = [];
+  data.map(function(element) {
+    if(element.tipo.id === 0 || element.tipo.id === 1){
+
+      subtotal += 2*parseInt(element.horasSemanais);
+    }else{
+
+      subtotal += parseInt(element.horasSemanais);
+    }
+    return subtotal;
+    
+  });
+  
+  if(contextType.regime.descricao === "20 horas"){
+    const falta = 20-subtotal;  
+    if(subtotal < 20){
+      erros.push({text: "Você não preencheu as 20 horas", replic: "Faltam "+falta+" horas. Volte e adicione mais horas."});
+    }
+  }else{
+    const falta = 40-subtotal;
+    if(subtotal < 40){
+      erros.push({text: "Você não preencheu as 40 horas", replic: "Faltam "+falta+" horas. Volte e adicione mais horas."});
+    }
+    
+  }
+  return (
+    <>
+      <div className="table-responsive">
+        <table className="table table-bordered table-danger">
+          
+          <tbody>
+
+          {erros.map((element, index) => (
+              <tr key={index}><th>{element.text}</th><td>{element.replic}</td></tr>
+            ))}
+
+
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+
+}
 function showTableByType(data, idTipo) {
+  
   switch (idTipo) {
     case 0:
       return showTable01(data);
@@ -174,12 +273,16 @@ function showData(data, idTipo) {
   );
 }
 
+
 function PanelPDF({ aoEnviar }) {
   const contentArea = useRef(null);
   const handleExportWithMethod = (event) => {
     savePDF(contentArea.current, { paperSize: "A4" });
   };
   const contextType = useContext(DataContext);
+  const now = new Date();
+  const dataStr = now.getDate() + "/" + (1+now.getMonth()) + "/" + now.getFullYear();
+
   return (
     <>
       <Typography variant="h4" component="h2">
@@ -217,6 +320,18 @@ function PanelPDF({ aoEnviar }) {
         {showData(contextType, 4)}
         {showData(contextType, 5)}
         {showData(contextType, 6)}
+        {showtotalData(contextType.data)}
+        <br/><br/>
+        <div className="d-flex p-2 bd-highlight">
+          Data: {dataStr}
+        </div>
+        <br/><br/>
+        <div className="d-flex justify-content-end">
+          _____________________________________
+          <br/>
+          <br/>
+          Assinartura do Docente
+        </div>
       </div>
       <Button
         type="submit"

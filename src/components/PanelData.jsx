@@ -1,10 +1,10 @@
 import { Button, TextField, Typography } from "@material-ui/core";
+import Alert from '@material-ui/lab/Alert';
 import { Autocomplete } from "@material-ui/lab";
 import React, { Component } from "react";
 import { DataContext } from "../services/DataContext";
 import List from "@material-ui/core/List";
 import Element from "../components/Element";
-import Range from "./Range";
 
 const tiposForm3 = [
   { descricao: "Tutoria", sigla: "T" },
@@ -26,8 +26,7 @@ const programas = [
 
 const tiposAtividade = [
   { descricao: "ENSINO DE GRADUAÇÃO", id: 0, minimo: 4, maximo: 20 },
-  { descricao: "ENSINO DE PÓS-GRADUAÇÃO STRICTO SENSU", id: 7, minimo: 0, maximo: 16 },
-  { descricao: "ENSINO DE PÓS-GRADUAÇÃO STRICTO LATO SENSU", id: 1, minimo: 0, maximo: 16},
+  { descricao: "ENSINO DE PÓS-GRADUAÇÃO STRICTO SENSU E LATO SENSU", id: 1, minimo: 0, maximo: 16 },
   { descricao: "ATIVIDADES COMPLEMENTARES DE ENSINO", id: 2, minimo: 8, maximo: 20},
   { descricao: "PROGRAMAS E PROJETOS DE PESQUISA", id: 3, minimo: 8, maximo: 20},
   { descricao: "PROGRAMAS E PROJETOS DE EXTENSÃO", id: 4 , minimo: 8, maximo: 20},
@@ -41,6 +40,7 @@ class PanelData extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      
       codigo: "",
       disciplina: "",
       horasSemanais: "",
@@ -58,6 +58,7 @@ class PanelData extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.removeData = this.removeData.bind(this);
     this.form1 = this.form1.bind(this);
+    this.showTableError = this.showTableError.bind(this);
   }
   removeData(itemId) {
     console.log(itemId);
@@ -185,6 +186,78 @@ class PanelData extends Component {
           Adicionar
         </Button>
       </>);
+  }
+
+  showTableError(contextType){
+    const data = contextType.data;
+    let subtotal = 0;
+    let subTotalEnsino = 0; 
+    let subTotalGraduacao = 0; 
+    let subTotalPos = 0; 
+    const erros = [];
+    data.map(function(element) {
+      if(element.tipo.id === 0){
+        subTotalGraduacao += 2*parseInt(element.horasSemanais);
+      }else if(element.tipo.id === 1){
+        subTotalPos += 2*parseInt(element.horasSemanais);
+      }
+      if(element.tipo.id === 0 || element.tipo.id === 1){
+        subtotal += 2*parseInt(element.horasSemanais);
+        subTotalEnsino += 2*parseInt(element.horasSemanais);
+      }else{
+  
+        subtotal += parseInt(element.horasSemanais);
+      }
+      return subtotal;
+      
+    });
+    
+    if(contextType.regime.descricao === "20 horas"){
+      const falta = 20-subtotal;  
+      const sobra =  parseInt(subtotal) - 20;
+      if(subtotal < 20){
+        erros.push({text: "Ainda faltam "+falta+" horas."});
+      } else if(subtotal > 20){
+        erros.push({text: "Você adicionou mais de 20 horas, "+sobra+" horas em excedente."});
+      }
+    }else{
+      const falta = 40-subtotal;
+      const sobra =  parseInt(subtotal) - 40;
+      if(subtotal < 40){
+        erros.push({text: "Você não adicionou as 40 horas, faltam "+falta+" horas."});
+      } else if(subtotal > 40){
+        erros.push({text: "Você adicionou mais de 40 horas, "+sobra+" horas em excedente."});
+      }
+      
+    }
+    if(subTotalEnsino < 8){
+      erros.push({text: "Carga Horária para Ensino abaixo da mínima."});
+    }else if(subTotalEnsino > 20){
+      erros.push({text: "Carga Horária para ensino acima de 20h"});
+    }
+    if(subTotalGraduacao < 4){
+      erros.push({text: "Adicione no mínimo 4 horas para ensino de graduação."});
+    }
+    if(subTotalPos > 16){
+      erros.push({text: "Você adicionou mais de 16 horas para pos."});
+    }
+    return (
+
+        <div>
+
+  
+              {erros.map((element, index) => (
+                <Alert severity="warning" key={index}>{element.text}</Alert>
+              ))}
+              <br/>
+              <Button type="submit" variant="contained" color="primary">
+                Avançar
+              </Button>
+        </div>
+  
+
+    );
+  
   }
   render() {
     const { state } = this;
@@ -511,7 +584,7 @@ class PanelData extends Component {
             </Typography>
           )}
         </form>
-
+            <br/><hr/>
         <List>
           {this.context.data.map((atividade, index) => (
             <Element
@@ -521,9 +594,8 @@ class PanelData extends Component {
             />
           ))}
         </List>
-        {tiposAtividade.map((element, index)=> {
-            
-        })}
+
+
 
         <form
           onSubmit={(event) => {
@@ -531,9 +603,9 @@ class PanelData extends Component {
             this.props.aoEnviar();
           }}
         >
-          <Button type="submit" variant="contained" color="primary">
-            Avançar
-          </Button>
+          <hr/>
+          {this.showTableError(this.context)}
+         
         </form>
       </>
     );
