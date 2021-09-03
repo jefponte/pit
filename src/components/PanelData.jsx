@@ -190,28 +190,51 @@ class PanelData extends Component {
 
   showTableError(contextType){
     const data = contextType.data;
-    let subtotal = 0;
-    let subTotalEnsino = 0; 
-    let subTotalGraduacao = 0; 
-    let subTotalPos = 0; 
+    var subtotal = 0;
+    var subTotalEnsino = 0; 
+    var subTotalGraduacao = 0; 
+    var subTotalPos = 0; 
+    var subTotalComplementar = 0; 
+    var subTotalPesquisa = 0; //Max 20
+    var subTotalExtensao = 0; //Max 20
+    var subTotalGestao = 0; //Max 40
+    var subTotalOutras = 0; //Max 8
     const erros = [];
     data.map(function(element) {
       if(element.tipo.id === 0){
         subTotalGraduacao += 2*parseInt(element.horasSemanais);
-      }else if(element.tipo.id === 1){
-        subTotalPos += 2*parseInt(element.horasSemanais);
-      }
-      if(element.tipo.id === 0 || element.tipo.id === 1){
         subtotal += 2*parseInt(element.horasSemanais);
         subTotalEnsino += 2*parseInt(element.horasSemanais);
-      }else{
-  
+        
+      }else if(element.tipo.id === 1){
+        subTotalPos += 2*parseInt(element.horasSemanais);
+        subtotal += 2*parseInt(element.horasSemanais);
+        subTotalEnsino += 2*parseInt(element.horasSemanais);
+      } else if(element.tipo.id === 2){
         subtotal += parseInt(element.horasSemanais);
+        subTotalComplementar += parseInt(element.horasSemanais);
+        subTotalEnsino += parseInt(element.horasSemanais);
       }
+      else if(element.tipo.id === 3){
+        subtotal += parseInt(element.horasSemanais);
+        subTotalPesquisa += parseInt(element.horasSemanais);
+      }else if(element.tipo.id === 4){
+        subtotal += parseInt(element.horasSemanais);
+        subTotalExtensao+= parseInt(element.horasSemanais);
+      } else if(element.tipo.id === 5){
+        subtotal += parseInt(element.horasSemanais);
+        subTotalGestao += parseInt(element.horasSemanais);
+      } else if(element.tipo.id === 6){
+        subtotal += parseInt(element.horasSemanais);
+        subTotalOutras += parseInt(element.horasSemanais);
+      }
+
+
       return subtotal;
       
     });
-    
+    subtotal = parseInt(subtotal);
+
     if(contextType.regime.descricao === "20 horas"){
       const falta = 20-subtotal;  
       const sobra =  parseInt(subtotal) - 20;
@@ -241,6 +264,19 @@ class PanelData extends Component {
     if(subTotalPos > 16){
       erros.push({text: "Você adicionou mais de 16 horas para pos."});
     }
+    
+    if(subTotalGestao > 40){
+      erros.push({text: "Você adicionou mais de 40 horas para outras atividades de gestão."});
+    }
+    if(subTotalExtensao > 20){
+      erros.push({text: "Você adicionou mais de 20 horas para outras atividades de extensão."});
+    }
+    if(subTotalOutras > 8){
+      erros.push({text: "Você adicionou mais de 8 horas para outras atividades relevantes."});
+    }
+    console.log(subTotalOutras);
+    
+    
     return (
 
         <div>

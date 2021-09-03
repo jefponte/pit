@@ -184,53 +184,7 @@ function showtotalData(data){
   );
 
 }
-function showTableError(contextType){
-  const data = contextType.data;
-  let subtotal = 0;
-  const erros = [];
-  data.map(function(element) {
-    if(element.tipo.id === 0 || element.tipo.id === 1){
 
-      subtotal += 2*parseInt(element.horasSemanais);
-    }else{
-
-      subtotal += parseInt(element.horasSemanais);
-    }
-    return subtotal;
-    
-  });
-  
-  if(contextType.regime.descricao === "20 horas"){
-    const falta = 20-subtotal;  
-    if(subtotal < 20){
-      erros.push({text: "Você não preencheu as 20 horas", replic: "Faltam "+falta+" horas. Volte e adicione mais horas."});
-    }
-  }else{
-    const falta = 40-subtotal;
-    if(subtotal < 40){
-      erros.push({text: "Você não preencheu as 40 horas", replic: "Faltam "+falta+" horas. Volte e adicione mais horas."});
-    }
-    
-  }
-  return (
-    <>
-      <div className="table-responsive">
-        <table className="table table-bordered table-danger">
-          
-          <tbody>
-
-          {erros.map((element, index) => (
-              <tr key={index}><th>{element.text}</th><td>{element.replic}</td></tr>
-            ))}
-
-
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
-
-}
 function showTableByType(data, idTipo) {
   
   switch (idTipo) {

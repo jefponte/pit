@@ -9,7 +9,7 @@ const regimes = [
 ];
 
 function DataProfessional({ aoEnviar, defaultData }) {
-  const [periodo, setPeriodo] = useState({ descricao: "2021.1" });
+  const [periodo, setPeriodo] = useState(defaultData.periodo);
   const [regime, setRegime] = useState(defaultData.regime);
 
 
@@ -30,7 +30,6 @@ function DataProfessional({ aoEnviar, defaultData }) {
     >
       <Autocomplete
         id="periodo"
-        defaultValue={{ descricao: "2021.1" }}
         name="periodo"
         options={periodos}
         getOptionLabel={(option) => option.descricao}

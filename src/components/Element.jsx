@@ -24,25 +24,25 @@ class Element extends Component{
         let descricaoExibir = "";
         switch(atividade.tipo.id){
           case 0:
-            descricaoExibir = atividade.disciplina; 
+            descricaoExibir = atividade.disciplina+" "+(2*atividade.horasSemanais) +" horas(2x)"; 
             break;
           case 1:
-            descricaoExibir = atividade.disciplina; 
+            descricaoExibir = atividade.disciplina+" "+(2*atividade.horasSemanais) +" horas(2x)"; 
             break;  
           case 3:
-            descricaoExibir = atividade.titulo;
+            descricaoExibir = atividade.titulo+" "+atividade.horasSemanais+" horas";
             break;
           case 4:
-            descricaoExibir = atividade.titulo;
+            descricaoExibir = atividade.titulo+" "+atividade.horasSemanais+" horas";
             break;
           case 5:
-            descricaoExibir = atividade.cargoFuncao;
+            descricaoExibir = atividade.cargoFuncao+" "+atividade.horasSemanais+" horas";
             break;
           case 6:
-              descricaoExibir = atividade.cargoFuncao;
+              descricaoExibir = atividade.cargoFuncao+" "+atividade.horasSemanais+" horas";
               break;
           case 2:
-            descricaoExibir = atividade.programa.descricao; 
+            descricaoExibir = atividade.programa.descricao+" "+atividade.horasSemanais+" horas"; 
             break;
           default:
             descricaoExibir = ""; 
@@ -61,7 +61,7 @@ class Element extends Component{
             </ListItemAvatar>
             <ListItemText
               primary={atividade.tipo.descricao}
-              secondary={descricaoExibir+" - "+atividade.horasSemanais}
+              secondary={descricaoExibir}
             />
             <ListItemSecondaryAction onClick={this.deleteItem.bind(this)}>
               <IconButton edge="end" aria-label="delete">
