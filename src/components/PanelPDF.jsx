@@ -19,7 +19,7 @@ function showTable01(data) {
 
   let subtotal = 0;
   data.map(function(element) {
-    return subtotal += parseInt(element.horasSemanais);
+    return subtotal += parseFloat(element.horasSemanais);
   });
 
   return (
@@ -54,7 +54,7 @@ function showTable01(data) {
 function showTable2(data) {
   let subtotal = 0;
   data.map(function(element) {
-    return subtotal += parseInt(element.horasSemanais);
+    return subtotal += parseFloat(element.horasSemanais);
   });
 
   return (
@@ -89,7 +89,7 @@ function showTable2(data) {
 function showTable34(data) {
   let subtotal = 0;
   data.map(function(element) {
-    return subtotal += parseInt(element.horasSemanais);
+    return subtotal += parseFloat(element.horasSemanais);
   });
   return (
     <>
@@ -124,7 +124,7 @@ function showTable34(data) {
 function showTable56(data) {
   let subtotal = 0;
   data.map(function(element) {
-    return subtotal += parseInt(element.horasSemanais);
+    return subtotal += parseFloat(element.horasSemanais);
   });
   return (
     <>
@@ -162,10 +162,10 @@ function showtotalData(data){
   data.map(function(element) {
     if(element.tipo.id === 0 || element.tipo.id === 1){
 
-      subtotal += 2*parseInt(element.horasSemanais);
+      subtotal += 2*parseFloat(element.horasSemanais);
     }else{
 
-      subtotal += parseInt(element.horasSemanais);
+      subtotal += parseFloat(element.horasSemanais);
     }
     return subtotal;
     

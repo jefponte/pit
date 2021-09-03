@@ -22,6 +22,8 @@ const programas = [
   { descricao: "PET" },
   { descricao: "Monitoria" },
   { descricao: "Pulsar" },
+  { descricao: "TCC de graduação ou pós-graduação"},
+  { descricao: "Supervisão de estágio"}
 ];
 
 const tiposAtividade = [
@@ -40,7 +42,7 @@ class PanelData extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      
+      errosData : {horas: { valido: true, texto: "" }},
       codigo: "",
       disciplina: "",
       horasSemanais: "",
@@ -59,9 +61,19 @@ class PanelData extends Component {
     this.removeData = this.removeData.bind(this);
     this.form1 = this.form1.bind(this);
     this.showTableError = this.showTableError.bind(this);
+    this.possoEnviar = this.possoEnviar.bind(this);
+    this.validarHoras = this.validarHoras.bind(this);
+  }
+  validarHoras(event){
+
+    if(event.target.value > 0 && event.target.value <= 10){
+      this.setState({errosData : {horas: { valido: true, texto: "" }}});
+    }else{
+      this.setState({errosData : {horas: { valido: false, texto: "Digite um valor até 10" }}});
+    }
   }
   removeData(itemId) {
-    console.log(itemId);
+    
 
     let arrayData = this.context.data;
     let dataIndex = arrayData.findIndex((atividade) => atividade.id === itemId);
@@ -69,6 +81,7 @@ class PanelData extends Component {
     this.context.data = arrayData;
 
     this.setState({
+      errosData : {horas: { valido: true, texto: "" }},
       codigo: "",
       disciplina: "",
       horasSemanais: "",
@@ -172,6 +185,10 @@ class PanelData extends Component {
         <br />
         <TextField
           required
+          error={!this.state.errosData.horas.valido}
+          helperText={this.state.errosData.horas.texto} 
+          onBlur={this.validarHoras}
+          step="0.5"
           value={state.horasSemanais}
           type="number"
           name="horasSemanais"
@@ -202,54 +219,54 @@ class PanelData extends Component {
     const erros = [];
     data.map(function(element) {
       if(element.tipo.id === 0){
-        subTotalGraduacao += 2*parseInt(element.horasSemanais);
-        subtotal += 2*parseInt(element.horasSemanais);
-        subTotalEnsino += 2*parseInt(element.horasSemanais);
+        subTotalGraduacao += 2*parseFloat(element.horasSemanais);
+        subtotal += 2*parseFloat(element.horasSemanais);
+        subTotalEnsino += 2*parseFloat(element.horasSemanais);
         
       }else if(element.tipo.id === 1){
-        subTotalPos += 2*parseInt(element.horasSemanais);
-        subtotal += 2*parseInt(element.horasSemanais);
-        subTotalEnsino += 2*parseInt(element.horasSemanais);
+        subTotalPos += 2*parseFloat(element.horasSemanais);
+        subtotal += 2*parseFloat(element.horasSemanais);
+        subTotalEnsino += 2*parseFloat(element.horasSemanais);
       } else if(element.tipo.id === 2){
-        subtotal += parseInt(element.horasSemanais);
-        subTotalComplementar += parseInt(element.horasSemanais);
-        subTotalEnsino += parseInt(element.horasSemanais);
+        subtotal += parseFloat(element.horasSemanais);
+        subTotalComplementar += parseFloat(element.horasSemanais);
+        subTotalEnsino += parseFloat(element.horasSemanais);
       }
       else if(element.tipo.id === 3){
-        subtotal += parseInt(element.horasSemanais);
-        subTotalPesquisa += parseInt(element.horasSemanais);
+        subtotal += parseFloat(element.horasSemanais);
+        subTotalPesquisa += parseFloat(element.horasSemanais);
       }else if(element.tipo.id === 4){
-        subtotal += parseInt(element.horasSemanais);
-        subTotalExtensao+= parseInt(element.horasSemanais);
+        subtotal += parseFloat(element.horasSemanais);
+        subTotalExtensao+= parseFloat(element.horasSemanais);
       } else if(element.tipo.id === 5){
-        subtotal += parseInt(element.horasSemanais);
-        subTotalGestao += parseInt(element.horasSemanais);
+        subtotal += parseFloat(element.horasSemanais);
+        subTotalGestao += parseFloat(element.horasSemanais);
       } else if(element.tipo.id === 6){
-        subtotal += parseInt(element.horasSemanais);
-        subTotalOutras += parseInt(element.horasSemanais);
+        subtotal += parseFloat(element.horasSemanais);
+        subTotalOutras += parseFloat(element.horasSemanais);
       }
 
 
       return subtotal;
       
     });
-    subtotal = parseInt(subtotal);
+    subtotal = parseFloat(subtotal);
 
     if(contextType.regime.descricao === "20 horas"){
       const falta = 20-subtotal;  
-      const sobra =  parseInt(subtotal) - 20;
+      const sobra =  subtotal - 20;
       if(subtotal < 20){
-        erros.push({text: "Ainda faltam "+falta+" horas."});
+        erros.push({text: "Ainda faltam "+falta.toFixed(2)+" horas."});
       } else if(subtotal > 20){
-        erros.push({text: "Você adicionou mais de 20 horas, "+sobra+" horas em excedente."});
+        erros.push({text: "Você adicionou mais de 20 horas, "+sobra.toFixed(2)+" horas em excedente."});
       }
     }else{
       const falta = 40-subtotal;
-      const sobra =  parseInt(subtotal) - 40;
+      const sobra =  subtotal - 40;
       if(subtotal < 40){
-        erros.push({text: "Você não adicionou as 40 horas, faltam "+falta+" horas."});
+        erros.push({text: "Você não adicionou as 40 horas, faltam "+falta.toFixed(2)+" horas."});
       } else if(subtotal > 40){
-        erros.push({text: "Você adicionou mais de 40 horas, "+sobra+" horas em excedente."});
+        erros.push({text: "Você adicionou mais de 40 horas, "+sobra.toFixed(2)+" horas em excedente."});
       }
       
     }
@@ -274,8 +291,6 @@ class PanelData extends Component {
     if(subTotalOutras > 8){
       erros.push({text: "Você adicionou mais de 8 horas para outras atividades relevantes."});
     }
-    console.log(subTotalOutras);
-    
     
     return (
 
@@ -294,6 +309,15 @@ class PanelData extends Component {
 
     );
   
+  }
+  possoEnviar() {
+    const erros = this.state.errosData;
+    for (let campo in erros) {
+      if (!erros[campo].valido) {
+        return false;
+      }
+    }
+    return true;
   }
   render() {
     const { state } = this;
@@ -318,7 +342,7 @@ class PanelData extends Component {
             <TextField required {...params} label="Tipo" variant="outlined" />
           )}
         />
-        <br />
+        <br/>
         <Autocomplete
           id="programa"
           options={programas}
@@ -534,7 +558,7 @@ class PanelData extends Component {
       <>
         <br />
         <TextField
-        required
+          required
           value={state.numeroPortaria}
           name="numeroPortaria"
           onChange={this.handleChange}
@@ -546,9 +570,9 @@ class PanelData extends Component {
         />
         <br />
         <TextField
-        required
-        type="date"
-        InputLabelProps={{
+          required
+          type="date"
+          InputLabelProps={{
             shrink: true,
           }}
           value={state.data}
@@ -561,7 +585,7 @@ class PanelData extends Component {
           margin="normal"
         />
         <TextField
-        required
+          required
           value={state.cargoFuncao}
           name="cargoFuncao"
           onChange={this.handleChange}
@@ -572,8 +596,8 @@ class PanelData extends Component {
           margin="normal"
         />
         <TextField
-        required
-        type="number"
+          required
+          type="number"
           value={state.horasSemanais}
           name="horasSemanais"
           onChange={this.handleChange}
@@ -588,12 +612,16 @@ class PanelData extends Component {
         </Button>
       </>,
     ];
+    
     return (
       <>
         <form
           onSubmit={(event) => {
             event.preventDefault();
-            this.handleAdd();
+            if (this.possoEnviar()) {
+              this.handleAdd();
+            }
+            
           }}
         >
           <Autocomplete
