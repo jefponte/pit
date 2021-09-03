@@ -23,13 +23,12 @@ class Element extends Component{
         const atividade = this.props.atividade;
         let descricaoExibir = "";
         switch(atividade.tipo.id){
+          case 0:
+            descricaoExibir = atividade.disciplina; 
+            break;
           case 1:
             descricaoExibir = atividade.disciplina; 
-            break;
-          case 2:
-            descricaoExibir = atividade.disciplina; 
-            break;
-            
+            break;  
           case 3:
             descricaoExibir = atividade.titulo;
             break;
