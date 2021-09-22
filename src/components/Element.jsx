@@ -24,25 +24,25 @@ class Element extends Component{
         let descricaoExibir = "";
         switch(atividade.tipo.id){
           case 0:
-            descricaoExibir = atividade.disciplina+" "+(2*atividade.horasSemanais) +" horas(2x)"; 
+            descricaoExibir = atividade.disciplina+" - "+(2*atividade.horasSemanais) +" horas(2x)"; 
             break;
           case 1:
-            descricaoExibir = atividade.disciplina+" "+(2*atividade.horasSemanais) +" horas(2x)"; 
+            descricaoExibir = atividade.disciplina+" - "+(2*atividade.horasSemanais) +" horas(2x)"; 
             break;  
           case 3:
-            descricaoExibir = atividade.titulo+" "+atividade.horasSemanais+" horas";
+            descricaoExibir = atividade.titulo+" - "+atividade.horasSemanais+" horas";
             break;
           case 4:
-            descricaoExibir = atividade.titulo+" "+atividade.horasSemanais+" horas";
+            descricaoExibir = atividade.titulo+" - "+atividade.horasSemanais+" horas";
             break;
           case 5:
-            descricaoExibir = atividade.cargoFuncao+" "+atividade.horasSemanais+" horas";
+            descricaoExibir = atividade.cargoFuncao+" - "+atividade.horasSemanais+" horas";
             break;
           case 6:
-              descricaoExibir = atividade.cargoFuncao+" "+atividade.horasSemanais+" horas";
+              descricaoExibir = atividade.cargoFuncao+" - "+atividade.horasSemanais+" horas";
               break;
           case 2:
-            descricaoExibir = atividade.programa.descricao+" "+atividade.horasSemanais+" horas"; 
+            descricaoExibir = atividade.programa.descricao+" - "+atividade.horasSemanais+" horas"; 
             break;
           default:
             descricaoExibir = ""; 

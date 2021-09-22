@@ -211,11 +211,10 @@ class PanelData extends Component {
     var subTotalEnsino = 0; 
     var subTotalGraduacao = 0; 
     var subTotalPos = 0; 
-    var subTotalComplementar = 0; 
-    var subTotalPesquisa = 0; //Max 20
     var subTotalExtensao = 0; //Max 20
     var subTotalGestao = 0; //Max 40
     var subTotalOutras = 0; //Max 8
+    var subTotalPesquisa = 0;
     const erros = [];
     data.map(function(element) {
       if(element.tipo.id === 0){
@@ -229,7 +228,6 @@ class PanelData extends Component {
         subTotalEnsino += 2*parseFloat(element.horasSemanais);
       } else if(element.tipo.id === 2){
         subtotal += parseFloat(element.horasSemanais);
-        subTotalComplementar += parseFloat(element.horasSemanais);
         subTotalEnsino += parseFloat(element.horasSemanais);
       }
       else if(element.tipo.id === 3){
@@ -270,9 +268,9 @@ class PanelData extends Component {
       }
       
     }
-    if(subTotalEnsino < 8){
+    if(subTotalEnsino < 16){
       erros.push({text: "Carga Horária para Ensino abaixo da mínima."});
-    }else if(subTotalEnsino > 20){
+    }else if(subTotalEnsino > 40){
       erros.push({text: "Carga Horária para ensino acima de 20h"});
     }
     if(subTotalGraduacao < 4){
