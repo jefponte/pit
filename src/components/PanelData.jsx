@@ -10,6 +10,7 @@ const tiposForm3 = [
   { descricao: "Tutoria", sigla: "T" },
   { descricao: "Coordenação", sigla: "C" },
   { descricao: "Orientação", sigla: "O" },
+  { descricao: "Reunião", sigla: "R" },
 ];
 const tiposForm4 = [
   { descricao: "Coordenador", sigla: "CD" },
@@ -23,7 +24,8 @@ const programas = [
   { descricao: "Monitoria" },
   { descricao: "Pulsar" },
   { descricao: "TCC de graduação ou pós-graduação"},
-  { descricao: "Supervisão de estágio"}
+  { descricao: "Supervisão de estágio"},
+  { descricao: "Reunião"}
 ];
 
 const tiposAtividade = [
