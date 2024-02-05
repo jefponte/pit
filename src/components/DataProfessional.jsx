@@ -1,7 +1,7 @@
 import { TextField, Button } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React, { useState } from "react";
-const periodos = [{ descricao: "2021.1" }, { descricao: "2021.2" }, , { descricao: "2022.1" }, { descricao: "2022.2" }, { descricao: "2023.1" }];
+const periodos = [{ descricao: "2021.1" }, { descricao: "2021.2" }, , { descricao: "2022.1" }, { descricao: "2022.2" }, { descricao: "2023.1" }, { descricao: "2023.2" }, { descricao: "2024.1" }, { descricao: "2024.2" }];
 const regimes = [
   { descricao: "20 horas" },
   { descricao: "40 horas" },
