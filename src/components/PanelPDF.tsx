@@ -1,3 +1,4 @@
+// src/components/PanelPDF.tsx
 import React, { useMemo, useRef, useState } from "react";
 import {
   Box,
@@ -13,12 +14,10 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import { useReactToPrint } from "react-to-print";
 
 import LogoUNILABPreto from "../assets/img/logo-unilab-preto.png";
-import { PITState, ActivityItem } from "../pit/pit.types";
+import { ActivityItem, PITState } from "../pit/pit.types";
 
 const tiposAtividade = [
   { descricao: "ENSINO DE GRADUAÇÃO", id: 0 },
@@ -31,7 +30,10 @@ const tiposAtividade = [
   { descricao: "ATIVIDADES DE PESQUISA", id: 7 },
 ] as const;
 
-/** Página A4 real no DOM (visual + export) */
+/* -------------------------------------------------------------------------- */
+/*  A4 + estilos de impressão                                                 */
+/* -------------------------------------------------------------------------- */
+
 const A4Paper = styled(Paper)(({ theme }) => ({
   width: "210mm",
   minHeight: "297mm",
@@ -46,6 +48,7 @@ const A4Paper = styled(Paper)(({ theme }) => ({
   fontSize: "11pt",
   lineHeight: 1.35,
 
+  // visualização em telas menores
   [theme.breakpoints.down("md")]: {
     transform: "scale(0.92)",
     transformOrigin: "top center",
@@ -54,7 +57,25 @@ const A4Paper = styled(Paper)(({ theme }) => ({
     transform: "scale(0.84)",
     transformOrigin: "top center",
   },
+
+  "@media print": {
+    margin: 0,
+    borderRadius: 0,
+    boxShadow: "none",
+    transform: "none",
+    width: "auto",
+    minHeight: "auto",
+    padding: "12mm",
+    overflow: "visible",
+  },
 }));
+
+const PrintRoot = styled("div")({
+  // Evita que o print pegue scale/transform do preview
+  "@media print": {
+    transform: "none !important",
+  },
+});
 
 const Header = styled("header")(({ theme }) => ({
   display: "flex",
@@ -63,6 +84,8 @@ const Header = styled("header")(({ theme }) => ({
   gap: "3mm",
   paddingBottom: "6mm",
   borderBottom: `1px solid ${theme.palette.divider}`,
+  breakInside: "avoid",
+  pageBreakInside: "avoid",
 }));
 
 const Logo = styled("img")({
@@ -81,6 +104,22 @@ const HeaderText = styled("div")({
   width: "100%",
 });
 
+const SectionWrap = styled("section")({
+  marginTop: "10px",
+  breakInside: "avoid",
+  pageBreakInside: "avoid",
+});
+
+const SignatureBlock = styled("section")({
+  marginTop: "12mm",
+  breakInside: "avoid",
+  pageBreakInside: "avoid",
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Helpers                                                                   */
+/* -------------------------------------------------------------------------- */
+
 function formatDateBR(d: Date) {
   return `${d.getDate()}/${1 + d.getMonth()}/${d.getFullYear()}`;
 }
@@ -94,17 +133,19 @@ function totalHours(items: ActivityItem[]) {
   items.forEach((element) => {
     const h = Number(element.horasSemanais || 0);
     if (element.tipo.id === 0 || element.tipo.id === 1) subtotal += 2 * h;
-    else subtotal += h; // inclui 2..7
+    else subtotal += h;
   });
   return subtotal;
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <Stack spacing={1} sx={{ mt: 2 }}>
-      <Typography sx={{ fontWeight: 700, fontSize: "12pt" }}>{title}</Typography>
-      {children}
-    </Stack>
+    <SectionWrap>
+      <Stack spacing={1}>
+        <Typography sx={{ fontWeight: 700, fontSize: "12pt" }}>{title}</Typography>
+        {children}
+      </Stack>
+    </SectionWrap>
   );
 }
 
@@ -114,8 +155,8 @@ function SimpleTable({
   footer,
 }: {
   head: string[];
-  rows: (React.ReactNode[])[]; // linhas
-  footer?: React.ReactNode[]; // rodapé (opcional)
+  rows: (React.ReactNode[])[]; // cada linha = cells
+  footer?: React.ReactNode[];
 }) {
   return (
     <Table
@@ -135,10 +176,13 @@ function SimpleTable({
           fontWeight: 700,
           backgroundColor: "rgba(0,0,0,0.03)",
         },
+
+        breakInside: "avoid",
+        pageBreakInside: "avoid",
       }}
     >
       <TableHead>
-        <TableRow>
+        <TableRow sx={{ breakInside: "avoid", pageBreakInside: "avoid" }}>
           {head.map((h, i) => (
             <TableCell key={i}>{h}</TableCell>
           ))}
@@ -147,7 +191,7 @@ function SimpleTable({
 
       <TableBody>
         {rows.map((r, i) => (
-          <TableRow key={i}>
+          <TableRow key={i} sx={{ breakInside: "avoid", pageBreakInside: "avoid" }}>
             {r.map((c, j) => (
               <TableCell key={j}>{c}</TableCell>
             ))}
@@ -155,7 +199,7 @@ function SimpleTable({
         ))}
 
         {footer && (
-          <TableRow>
+          <TableRow sx={{ breakInside: "avoid", pageBreakInside: "avoid" }}>
             {footer.map((c, j) => (
               <TableCell key={j} sx={{ fontWeight: j === 0 ? 700 : undefined }}>
                 {c}
@@ -168,7 +212,10 @@ function SimpleTable({
   );
 }
 
-/** Tabelas antigas (0..6) */
+/* -------------------------------------------------------------------------- */
+/*  Render tabelas (0..6)                                                     */
+/* -------------------------------------------------------------------------- */
+
 function renderByType(items: ActivityItem[], idTipo: number) {
   const dataPrint = onlyType(items, idTipo);
   if (dataPrint.length === 0) return null;
@@ -247,10 +294,12 @@ function renderByType(items: ActivityItem[], idTipo: number) {
   );
 }
 
-/** NOVO: tabelas adicionais no final (tipo 7) */
+/* -------------------------------------------------------------------------- */
+/*  Render tabelas adicionais: tipo 7 (Atividades de Pesquisa)                */
+/* -------------------------------------------------------------------------- */
+
 function renderPesquisaTables(items: ActivityItem[]) {
   const pesquisa = items.filter((i) => i.tipo.id === 7);
-  if (pesquisa.length === 0) return null;
 
   const mono = pesquisa.filter((i) => i.pesquisaSubtipo === "ORIENTACAO_MONOGRAFIA");
   const dt = pesquisa.filter((i) => i.pesquisaSubtipo === "ORIENTACAO_DISSERTACOES_TESES");
@@ -259,9 +308,11 @@ function renderPesquisaTables(items: ActivityItem[]) {
 
   const sum = (arr: ActivityItem[]) => arr.reduce((acc, e) => acc + Number(e.horasSemanais || 0), 0);
 
+  if (pesquisa.length === 0) return null;
+
   return (
-    <>
-      <Typography sx={{ mt: 3, fontWeight: 800, fontSize: "13pt" }}>
+    <SectionWrap style={{ marginTop: "14px" }}>
+      <Typography sx={{ mt: 2, fontWeight: 800, fontSize: "13pt" }}>
         ATIVIDADES DE PESQUISA
       </Typography>
 
@@ -329,81 +380,13 @@ function renderPesquisaTables(items: ActivityItem[]) {
           />
         </Section>
       )}
-    </>
+    </SectionWrap>
   );
 }
 
-/** Export A4 (imagem grande fatiada) */
-async function exportPDF_A4(contentEl: HTMLElement) {
-  const pdf = new jsPDF("p", "mm", "a4");
-  const pageWidth = 210;
-  const pageHeight = 297;
-
-  const canvas = await html2canvas(contentEl, {
-    scale: 2.5,
-    backgroundColor: "#ffffff",
-    useCORS: true,
-    logging: false,
-  });
-
-  const imgData = canvas.toDataURL("image/png");
-  const imgWidth = pageWidth;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-  let heightLeft = imgHeight;
-  let position = 0;
-
-  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight, undefined, "FAST");
-  heightLeft -= pageHeight;
-
-  while (heightLeft > 0) {
-    position -= pageHeight;
-    pdf.addPage();
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight, undefined, "FAST");
-    heightLeft -= pageHeight;
-  }
-
-  pdf.save("PIT.pdf");
-}
-
-/**
- * ✅ Anti-corte:
- * Se o bloco (data+assinatura) estiver atravessando a linha de quebra,
- * empurra ele pro topo da próxima página antes de capturar.
- */
-function prepareAvoidSplit(contentEl: HTMLElement, blockEl: HTMLElement) {
-  // reset
-  const prev = blockEl.style.marginTop;
-  blockEl.style.marginTop = "0px";
-
-  const contentRect = contentEl.getBoundingClientRect();
-  const blockRect = blockEl.getBoundingClientRect();
-
-  const contentWidthPx = contentRect.width;
-  const pageHeightPx = contentWidthPx * (297 / 210); // A4 proporcional
-
-  // y do bloco relativo ao content
-  const blockTop = blockRect.top - contentRect.top;
-  const blockHeight = blockRect.height;
-
-  const yWithinPage = blockTop % pageHeightPx;
-
-  // “folga” pra não ficar colado no fim (ajusta se quiser)
-  const bottomSafePx = 48;
-
-  const willCrossPage =
-    yWithinPage + blockHeight > pageHeightPx - bottomSafePx;
-
-  if (willCrossPage) {
-    const pushDown = pageHeightPx - yWithinPage; // joga para próxima página
-    blockEl.style.marginTop = `${Math.ceil(pushDown)}px`;
-  }
-
-  // retorna função pra restaurar
-  return () => {
-    blockEl.style.marginTop = prev;
-  };
-}
+/* -------------------------------------------------------------------------- */
+/*  Component                                                                 */
+/* -------------------------------------------------------------------------- */
 
 type Props = {
   pit: PITState;
@@ -411,37 +394,49 @@ type Props = {
 };
 
 export default function PanelPDF({ pit, aoEnviar }: Props) {
-  const contentArea = useRef<HTMLDivElement | null>(null);
-  const signatureBlockRef = useRef<HTMLDivElement | null>(null);
-
-  const [exporting, setExporting] = useState(false);
+  // ✅ API do react-to-print v3+: usa contentRef
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [printing, setPrinting] = useState(false);
 
   const dataStr = useMemo(() => formatDateBR(new Date()), []);
 
-  const handleExport = async () => {
-    if (!contentArea.current) return;
-    if (!signatureBlockRef.current) return;
+  const handlePrint = useReactToPrint({
+    contentRef, // ✅ ESSA é a chave (e resolve "There is nothing to print")
+    documentTitle: "PIT",
+    onBeforePrint: async () => {
+      setPrinting(true);
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    },
+    onAfterPrint: () => setPrinting(false),
+    pageStyle: `
+      @page {
+        size: A4;
+        margin: 12mm;
+      }
+      @media print {
+        html, body {
+          height: auto !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
 
-    setExporting(true);
+        /* dá margem acima nas páginas seguintes (depende do browser, mas ajuda) */
+        .print-root {
+          padding-top: 0;
+        }
 
-    // ✅ empurra assinatura se estiver “na linha de corte”
-    const restore = prepareAvoidSplit(contentArea.current, signatureBlockRef.current);
-
-    try {
-      // dá um tick pro browser aplicar o layout antes de capturar
-      await new Promise((r) => setTimeout(r, 0));
-      await exportPDF_A4(contentArea.current);
-    } finally {
-      restore();
-      setExporting(false);
-    }
-  };
+        /* evitar cortes */
+        header, section, table, tr, td, th {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+      }
+    `,
+  });
 
   return (
     <Stack spacing={2}>
-      <Typography variant="h5">
-        Verifique as informações e depois clique em Gerar PDF
-      </Typography>
+      <Typography variant="h5">Verifique as informações e depois clique em Gerar PDF</Typography>
 
       <Box
         component="form"
@@ -455,64 +450,67 @@ export default function PanelPDF({ pit, aoEnviar }: Props) {
         </Button>
       </Box>
 
-      <A4Paper ref={contentArea}>
-        {/* HEADER */}
-        <Header>
-          <Logo src={LogoUNILABPreto} alt="Logo UNILAB" />
-          <HeaderText>
-            <Typography sx={{ fontSize: "14pt", fontWeight: 800, letterSpacing: 0.2 }}>
-              PLANO INDIVIDUAL DE TRABALHO (PIT)
-            </Typography>
+      {/* ✅ o ref TEM que estar nesse nó */}
+      <PrintRoot ref={contentRef} className="print-root">
+        <A4Paper>
+          <Header>
+            <Logo src={LogoUNILABPreto} alt="Logo UNILAB" />
+            <HeaderText>
+              <Typography sx={{ fontSize: "14pt", fontWeight: 800, letterSpacing: 0.2 }}>
+                PLANO INDIVIDUAL DE TRABALHO (PIT)
+              </Typography>
 
-            <Typography sx={{ fontSize: "11pt" }}>
-              Semestre: <b>{pit.periodo?.descricao ?? ""}</b>
-            </Typography>
+              <Typography sx={{ fontSize: "11pt" }}>
+                Semestre: <b>{pit.periodo?.descricao ?? ""}</b>
+              </Typography>
 
-            <Typography sx={{ fontSize: "11pt" }}>
-              Docente: <b>{pit.nome}</b> &nbsp;|&nbsp; SIAPE: <b>{pit.siape}</b>
-            </Typography>
-          </HeaderText>
-        </Header>
+              <Typography sx={{ fontSize: "11pt" }}>
+                Docente: <b>{pit.nome}</b> &nbsp;|&nbsp; SIAPE: <b>{pit.siape}</b>
+              </Typography>
+            </HeaderText>
+          </Header>
 
-        <Divider sx={{ my: "6mm" }} />
+          <Divider sx={{ my: "6mm" }} />
 
-        {/* TABELAS ANTIGAS (0..6) */}
-        {renderByType(pit.data, 0)}
-        {renderByType(pit.data, 1)}
-        {renderByType(pit.data, 2)}
-        {renderByType(pit.data, 3)}
-        {renderByType(pit.data, 4)}
-        {renderByType(pit.data, 5)}
-        {renderByType(pit.data, 6)}
+          {renderByType(pit.data, 0)}
+          {renderByType(pit.data, 1)}
+          {renderByType(pit.data, 2)}
+          {renderByType(pit.data, 3)}
+          {renderByType(pit.data, 4)}
+          {renderByType(pit.data, 5)}
+          {renderByType(pit.data, 6)}
 
-        {/* NOVAS TABELAS - ATIVIDADES DE PESQUISA (no final) */}
-        {renderPesquisaTables(pit.data)}
+          {renderPesquisaTables(pit.data)}
 
-        {/* TOTAL */}
-        <Section title="Carga Horária Semanal Total">
-          <SimpleTable
-            head={["Total", ""]}
-            rows={[[<b key="t">{totalHours(pit.data)} horas</b>, ""]]}
-          />
-        </Section>
+          <Section title="Carga Horária Semanal Total">
+            <SimpleTable
+              head={["Total", ""]}
+              rows={[[<b key="t">{totalHours(pit.data)} horas</b>, ""]]}
+            />
+          </Section>
 
-        {/* ✅ BLOCO QUE NÃO PODE QUEBRAR NO MEIO */}
-        <Box ref={signatureBlockRef} sx={{ mt: "8mm" }}>
-          <Typography sx={{ fontSize: "11pt" }}>Data: {dataStr}</Typography>
+          {/* assinatura NÃO quebra */}
+          <SignatureBlock>
+            <Typography sx={{ fontSize: "11pt" }}>Data: {dataStr}</Typography>
 
-          <Box sx={{ mt: "12mm", textAlign: "right" }}>
-            <Typography sx={{ fontSize: "11pt" }}>
-              _____________________________________
-            </Typography>
-            <Typography sx={{ mt: "3mm", fontSize: "11pt" }}>
-              Assinatura do Docente
-            </Typography>
-          </Box>
-        </Box>
-      </A4Paper>
+            <Box sx={{ mt: "12mm", textAlign: "right" }}>
+              <Typography sx={{ fontSize: "11pt" }}>_____________________________________</Typography>
+              <Typography sx={{ mt: "3mm", fontSize: "11pt" }}>Assinatura do Docente</Typography>
+            </Box>
+          </SignatureBlock>
+        </A4Paper>
+      </PrintRoot>
 
-      <Button variant="contained" onClick={handleExport} disabled={exporting}>
-        {exporting ? "Gerando..." : "Gerar PDF"}
+      <Button
+        variant="contained"
+        disabled={printing}
+        onClick={() => {
+          // segurança extra: evita clicar antes do ref montar
+          if (!contentRef.current) return;
+          handlePrint(); // ✅ agora sempre existe e não dá "then undefined"
+        }}
+      >
+        {printing ? "Abrindo impressão..." : "Gerar PDF"}
       </Button>
     </Stack>
   );
