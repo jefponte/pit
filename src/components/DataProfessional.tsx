@@ -5,11 +5,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { Periodo, Regime } from "../pit/pit.types";
 
 const periodos: Periodo[] = [
-  { descricao: "2021.1" }, { descricao: "2021.2" }, { descricao: "2022.1" }, { descricao: "2022.2" },
-  { descricao: "2023.1" }, { descricao: "2023.2" }, { descricao: "2024.1" }, { descricao: "2024.2" },
   { descricao: "2025.1" }, { descricao: "2025.2" }, { descricao: "2026.1" }, { descricao: "2026.2" },
-  { descricao: "2027.1" }, { descricao: "2027.2" }, { descricao: "2028.1" }, { descricao: "2028.2" },
-  { descricao: "2029.1" }, { descricao: "2029.2" }, { descricao: "2030.1" }, { descricao: "2030.2" },
 ];
 
 const regimes: Regime[] = [
