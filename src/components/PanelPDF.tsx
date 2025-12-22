@@ -1,4 +1,3 @@
-// src/components/PanelPDF.tsx
 import React, { useMemo, useRef, useState } from "react";
 import {
   Box,
@@ -29,9 +28,10 @@ const tiposAtividade = [
   { descricao: "PROGRAMAS E PROJETOS DE EXTENSÃO", id: 4 },
   { descricao: "ATIVIDADES DE GESTÃO", id: 5 },
   { descricao: "OUTRAS ATIVIDADES RELEVANTES", id: 6 },
+  { descricao: "ATIVIDADES DE PESQUISA", id: 7 },
 ] as const;
 
-/** Página A4 real no DOM (210mm x 297mm) */
+/** Página A4 real no DOM (visual + export) */
 const A4Paper = styled(Paper)(({ theme }) => ({
   width: "210mm",
   minHeight: "297mm",
@@ -56,7 +56,6 @@ const A4Paper = styled(Paper)(({ theme }) => ({
   },
 }));
 
-/** Cabeçalho tipo documento: logo em cima, texto embaixo */
 const Header = styled("header")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -66,20 +65,14 @@ const Header = styled("header")(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-/**
- * Logo com proporção preservada:
- * - height fixa (mm) => previsível no A4/PDF
- * - maxWidth evita estourar
- */
 const Logo = styled("img")({
-  height: "22mm",     // ajuste fino aqui (ex: 20mm, 24mm)
+  height: "22mm",
   width: "auto",
-  maxWidth: "120mm",  // limite de largura pra não ficar “esticada”
+  maxWidth: "120mm",
   objectFit: "contain",
   display: "block",
 });
 
-/** Bloco central de textos */
 const HeaderText = styled("div")({
   textAlign: "center",
   display: "flex",
@@ -101,7 +94,7 @@ function totalHours(items: ActivityItem[]) {
   items.forEach((element) => {
     const h = Number(element.horasSemanais || 0);
     if (element.tipo.id === 0 || element.tipo.id === 1) subtotal += 2 * h;
-    else subtotal += h;
+    else subtotal += h; // inclui 2..7
   });
   return subtotal;
 }
@@ -121,8 +114,8 @@ function SimpleTable({
   footer,
 }: {
   head: string[];
-  rows: (React.ReactNode[])[];
-  footer?: React.ReactNode[];
+  rows: (React.ReactNode[])[]; // linhas
+  footer?: React.ReactNode[]; // rodapé (opcional)
 }) {
   return (
     <Table
@@ -151,6 +144,7 @@ function SimpleTable({
           ))}
         </TableRow>
       </TableHead>
+
       <TableBody>
         {rows.map((r, i) => (
           <TableRow key={i}>
@@ -159,6 +153,7 @@ function SimpleTable({
             ))}
           </TableRow>
         ))}
+
         {footer && (
           <TableRow>
             {footer.map((c, j) => (
@@ -173,25 +168,28 @@ function SimpleTable({
   );
 }
 
+/** Tabelas antigas (0..6) */
 function renderByType(items: ActivityItem[], idTipo: number) {
   const dataPrint = onlyType(items, idTipo);
   if (dataPrint.length === 0) return null;
 
   const heading = `${idTipo + 1}. ${tiposAtividade[idTipo].descricao}`;
 
+  // 0/1 (subtotal x2)
   if (idTipo === 0 || idTipo === 1) {
     const subtotal = dataPrint.reduce((acc, e) => acc + Number(e.horasSemanais || 0), 0);
     return (
       <Section title={heading}>
         <SimpleTable
           head={["Código", "Disciplina", "Horas semanais", "Subtotal (x2)"]}
-          rows={dataPrint.map((e) => [e.codigo, e.disciplina, e.horasSemanais, "-"])}
+          rows={dataPrint.map((e) => [e.codigo ?? "", e.disciplina ?? "", e.horasSemanais ?? "", "-"])}
           footer={["Subtotal (x2)", "-", "-", subtotal * 2]}
         />
       </Section>
     );
   }
 
+  // 2
   if (idTipo === 2) {
     const subtotal = dataPrint.reduce((acc, e) => acc + Number(e.horasSemanais || 0), 0);
     return (
@@ -199,10 +197,10 @@ function renderByType(items: ActivityItem[], idTipo: number) {
         <SimpleTable
           head={["Tipo", "Programa", "Horas semanais", "Subtotal"]}
           rows={dataPrint.map((e) => [
-            e.tipoFuncao?.sigla,
-            e.programa?.descricao,
-            e.horasSemanais,
-            e.horasSemanais,
+            e.tipoFuncao?.sigla ?? "",
+            e.programa?.descricao ?? "",
+            e.horasSemanais ?? "",
+            e.horasSemanais ?? "",
           ])}
           footer={["Subtotal", "-", "-", subtotal]}
         />
@@ -210,6 +208,7 @@ function renderByType(items: ActivityItem[], idTipo: number) {
     );
   }
 
+  // 3/4
   if (idTipo === 3 || idTipo === 4) {
     const subtotal = dataPrint.reduce((acc, e) => acc + Number(e.horasSemanais || 0), 0);
     return (
@@ -217,11 +216,11 @@ function renderByType(items: ActivityItem[], idTipo: number) {
         <SimpleTable
           head={["Tipo", "Data de Aprovação", "Título", "Horas Semanais", "Subtotal"]}
           rows={dataPrint.map((e) => [
-            e.tipoFuncao?.sigla,
-            e.dataAprovacao,
-            e.titulo,
-            e.horasSemanais,
-            e.horasSemanais,
+            e.tipoFuncao?.sigla ?? "",
+            e.dataAprovacao ?? "",
+            e.titulo ?? "",
+            e.horasSemanais ?? "",
+            e.horasSemanais ?? "",
           ])}
           footer={["Subtotal", "-", "-", subtotal, ""]}
         />
@@ -229,17 +228,18 @@ function renderByType(items: ActivityItem[], idTipo: number) {
     );
   }
 
+  // 5/6
   const subtotal = dataPrint.reduce((acc, e) => acc + Number(e.horasSemanais || 0), 0);
   return (
     <Section title={heading}>
       <SimpleTable
         head={["Nº da Portaria", "Data", "Cargo ou função", "Horas Semanais", "Subtotal"]}
         rows={dataPrint.map((e) => [
-          e.numeroPortaria,
-          e.data,
-          e.cargoFuncao,
-          e.horasSemanais,
-          e.horasSemanais,
+          e.numeroPortaria ?? "",
+          e.data ?? "",
+          e.cargoFuncao ?? "",
+          e.horasSemanais ?? "",
+          e.horasSemanais ?? "",
         ])}
         footer={["Subtotal", "-", "-", subtotal, ""]}
       />
@@ -247,6 +247,93 @@ function renderByType(items: ActivityItem[], idTipo: number) {
   );
 }
 
+/** NOVO: tabelas adicionais no final (tipo 7) */
+function renderPesquisaTables(items: ActivityItem[]) {
+  const pesquisa = items.filter((i) => i.tipo.id === 7);
+  if (pesquisa.length === 0) return null;
+
+  const mono = pesquisa.filter((i) => i.pesquisaSubtipo === "ORIENTACAO_MONOGRAFIA");
+  const dt = pesquisa.filter((i) => i.pesquisaSubtipo === "ORIENTACAO_DISSERTACOES_TESES");
+  const icit = pesquisa.filter((i) => i.pesquisaSubtipo === "ORIENTACAO_IC_IT");
+  const proj = pesquisa.filter((i) => i.pesquisaSubtipo === "PROGRAMA_PROJETO_PESQUISA");
+
+  const sum = (arr: ActivityItem[]) => arr.reduce((acc, e) => acc + Number(e.horasSemanais || 0), 0);
+
+  return (
+    <>
+      <Typography sx={{ mt: 3, fontWeight: 800, fontSize: "13pt" }}>
+        ATIVIDADES DE PESQUISA
+      </Typography>
+
+      {mono.length > 0 && (
+        <Section title="Orientação (Monografia)">
+          <SimpleTable
+            head={["Situação", "Nome do Orientando", "Horas Semanais", "Subtotal"]}
+            rows={mono.map((e) => [
+              e.pesquisaSituacao ?? "",
+              e.pesquisaNomeOrientando ?? "",
+              e.horasSemanais ?? "",
+              e.horasSemanais ?? "",
+            ])}
+            footer={["Subtotal", "-", "-", sum(mono)]}
+          />
+        </Section>
+      )}
+
+      {dt.length > 0 && (
+        <Section title="Orientação (Dissertações e Teses)">
+          <SimpleTable
+            head={["Nível", "Tipo", "Situação", "Orientando", "Programa", "Horas", "Subtotal"]}
+            rows={dt.map((e) => [
+              e.pesquisaNivelDT ?? "",
+              e.pesquisaTipoDT ?? "",
+              e.pesquisaSituacao ?? "",
+              e.pesquisaNomeOrientando ?? "",
+              e.pesquisaNomePrograma ?? "",
+              e.horasSemanais ?? "",
+              e.horasSemanais ?? "",
+            ])}
+            footer={["Subtotal", "-", "-", "-", "-", "-", sum(dt)]}
+          />
+        </Section>
+      )}
+
+      {icit.length > 0 && (
+        <Section title="Orientação (Iniciação científica ou tecnológica)">
+          <SimpleTable
+            head={["Tipo", "Situação", "Nome do Orientando", "Horas", "Subtotal"]}
+            rows={icit.map((e) => [
+              e.pesquisaTipoICIT ?? "",
+              e.pesquisaSituacao ?? "",
+              e.pesquisaNomeOrientando ?? "",
+              e.horasSemanais ?? "",
+              e.horasSemanais ?? "",
+            ])}
+            footer={["Subtotal", "-", "-", "-", sum(icit)]}
+          />
+        </Section>
+      )}
+
+      {proj.length > 0 && (
+        <Section title="Programas e Projetos de pesquisa">
+          <SimpleTable
+            head={["Tipo", "Data de Aprovação", "Título", "Horas", "Subtotal"]}
+            rows={proj.map((e) => [
+              e.pesquisaTipoProjeto ?? "",
+              e.pesquisaDataAprovacao ?? "",
+              e.pesquisaTitulo ?? "",
+              e.horasSemanais ?? "",
+              e.horasSemanais ?? "",
+            ])}
+            footer={["Subtotal", "-", "-", "-", sum(proj)]}
+          />
+        </Section>
+      )}
+    </>
+  );
+}
+
+/** Export A4 (imagem grande fatiada) */
 async function exportPDF_A4(contentEl: HTMLElement) {
   const pdf = new jsPDF("p", "mm", "a4");
   const pageWidth = 210;
@@ -279,6 +366,45 @@ async function exportPDF_A4(contentEl: HTMLElement) {
   pdf.save("PIT.pdf");
 }
 
+/**
+ * ✅ Anti-corte:
+ * Se o bloco (data+assinatura) estiver atravessando a linha de quebra,
+ * empurra ele pro topo da próxima página antes de capturar.
+ */
+function prepareAvoidSplit(contentEl: HTMLElement, blockEl: HTMLElement) {
+  // reset
+  const prev = blockEl.style.marginTop;
+  blockEl.style.marginTop = "0px";
+
+  const contentRect = contentEl.getBoundingClientRect();
+  const blockRect = blockEl.getBoundingClientRect();
+
+  const contentWidthPx = contentRect.width;
+  const pageHeightPx = contentWidthPx * (297 / 210); // A4 proporcional
+
+  // y do bloco relativo ao content
+  const blockTop = blockRect.top - contentRect.top;
+  const blockHeight = blockRect.height;
+
+  const yWithinPage = blockTop % pageHeightPx;
+
+  // “folga” pra não ficar colado no fim (ajusta se quiser)
+  const bottomSafePx = 48;
+
+  const willCrossPage =
+    yWithinPage + blockHeight > pageHeightPx - bottomSafePx;
+
+  if (willCrossPage) {
+    const pushDown = pageHeightPx - yWithinPage; // joga para próxima página
+    blockEl.style.marginTop = `${Math.ceil(pushDown)}px`;
+  }
+
+  // retorna função pra restaurar
+  return () => {
+    blockEl.style.marginTop = prev;
+  };
+}
+
 type Props = {
   pit: PITState;
   aoEnviar: () => void;
@@ -286,16 +412,27 @@ type Props = {
 
 export default function PanelPDF({ pit, aoEnviar }: Props) {
   const contentArea = useRef<HTMLDivElement | null>(null);
+  const signatureBlockRef = useRef<HTMLDivElement | null>(null);
+
   const [exporting, setExporting] = useState(false);
 
   const dataStr = useMemo(() => formatDateBR(new Date()), []);
 
   const handleExport = async () => {
     if (!contentArea.current) return;
+    if (!signatureBlockRef.current) return;
+
     setExporting(true);
+
+    // ✅ empurra assinatura se estiver “na linha de corte”
+    const restore = prepareAvoidSplit(contentArea.current, signatureBlockRef.current);
+
     try {
+      // dá um tick pro browser aplicar o layout antes de capturar
+      await new Promise((r) => setTimeout(r, 0));
       await exportPDF_A4(contentArea.current);
     } finally {
+      restore();
       setExporting(false);
     }
   };
@@ -319,9 +456,9 @@ export default function PanelPDF({ pit, aoEnviar }: Props) {
       </Box>
 
       <A4Paper ref={contentArea}>
+        {/* HEADER */}
         <Header>
           <Logo src={LogoUNILABPreto} alt="Logo UNILAB" />
-
           <HeaderText>
             <Typography sx={{ fontSize: "14pt", fontWeight: 800, letterSpacing: 0.2 }}>
               PLANO INDIVIDUAL DE TRABALHO (PIT)
@@ -339,6 +476,7 @@ export default function PanelPDF({ pit, aoEnviar }: Props) {
 
         <Divider sx={{ my: "6mm" }} />
 
+        {/* TABELAS ANTIGAS (0..6) */}
         {renderByType(pit.data, 0)}
         {renderByType(pit.data, 1)}
         {renderByType(pit.data, 2)}
@@ -347,6 +485,10 @@ export default function PanelPDF({ pit, aoEnviar }: Props) {
         {renderByType(pit.data, 5)}
         {renderByType(pit.data, 6)}
 
+        {/* NOVAS TABELAS - ATIVIDADES DE PESQUISA (no final) */}
+        {renderPesquisaTables(pit.data)}
+
+        {/* TOTAL */}
         <Section title="Carga Horária Semanal Total">
           <SimpleTable
             head={["Total", ""]}
@@ -354,17 +496,18 @@ export default function PanelPDF({ pit, aoEnviar }: Props) {
           />
         </Section>
 
-        <Box sx={{ mt: "8mm" }}>
+        {/* ✅ BLOCO QUE NÃO PODE QUEBRAR NO MEIO */}
+        <Box ref={signatureBlockRef} sx={{ mt: "8mm" }}>
           <Typography sx={{ fontSize: "11pt" }}>Data: {dataStr}</Typography>
-        </Box>
 
-        <Box sx={{ mt: "12mm", textAlign: "right" }}>
-          <Typography sx={{ fontSize: "11pt" }}>
-            _____________________________________
-          </Typography>
-          <Typography sx={{ mt: "3mm", fontSize: "11pt" }}>
-            Assinatura do Docente
-          </Typography>
+          <Box sx={{ mt: "12mm", textAlign: "right" }}>
+            <Typography sx={{ fontSize: "11pt" }}>
+              _____________________________________
+            </Typography>
+            <Typography sx={{ mt: "3mm", fontSize: "11pt" }}>
+              Assinatura do Docente
+            </Typography>
+          </Box>
         </Box>
       </A4Paper>
 

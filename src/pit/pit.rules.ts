@@ -2,10 +2,17 @@ import { ActivityItem, PITState } from "./pit.types";
 
 export type Totals = {
   subtotalTotal: number;
+
   subtotalEnsino: number;
   subtotalGraduacao: number;
   subtotalPos: number;
+
+  // tipo 3 (como já existia)
   subtotalPesquisa: number;
+
+  // tipo 7 (novo)
+  subtotalAtividadesPesquisa: number;
+
   subtotalExtensao: number;
   subtotalGestao: number;
   subtotalOutras: number;
@@ -13,10 +20,14 @@ export type Totals = {
 
 export function calculateTotals(items: ActivityItem[]): Totals {
   let subtotalTotal = 0;
+
   let subtotalEnsino = 0;
   let subtotalGraduacao = 0;
   let subtotalPos = 0;
-  let subtotalPesquisa = 0;
+
+  let subtotalPesquisa = 0; // id 3
+  let subtotalAtividadesPesquisa = 0; // id 7
+
   let subtotalExtensao = 0;
   let subtotalGestao = 0;
   let subtotalOutras = 0;
@@ -47,15 +58,23 @@ export function calculateTotals(items: ActivityItem[]): Totals {
     } else if (element.tipo.id === 6) {
       subtotalOutras += h;
       subtotalTotal += h;
+    } else if (element.tipo.id === 7) {
+      // ✅ NOVO: Atividades de Pesquisa soma normal
+      subtotalAtividadesPesquisa += h;
+      subtotalTotal += h;
     }
   }
 
   return {
     subtotalTotal,
+
     subtotalEnsino,
     subtotalGraduacao,
     subtotalPos,
+
     subtotalPesquisa,
+    subtotalAtividadesPesquisa,
+
     subtotalExtensao,
     subtotalGestao,
     subtotalOutras,
@@ -75,7 +94,9 @@ export function validatePIT(state: PITState): string[] {
     if (totals.subtotalTotal < 20) {
       erros.push(`Ainda faltam ${falta.toFixed(2)} horas.`);
     } else if (totals.subtotalTotal > 20) {
-      erros.push(`Você adicionou mais de 20 horas, ${sobra.toFixed(2)} horas em excedente.`);
+      erros.push(
+        `Você adicionou mais de 20 horas, ${sobra.toFixed(2)} horas em excedente.`
+      );
     }
   } else {
     const falta = 40 - totals.subtotalTotal;
@@ -84,22 +105,35 @@ export function validatePIT(state: PITState): string[] {
     if (totals.subtotalTotal < 40) {
       erros.push(`Você não adicionou as 40 horas, faltam ${falta.toFixed(2)} horas.`);
     } else if (totals.subtotalTotal > 40) {
-      erros.push(`Você adicionou mais de 40 horas, ${sobra.toFixed(2)} horas em excedente.`);
+      erros.push(
+        `Você adicionou mais de 40 horas, ${sobra.toFixed(2)} horas em excedente.`
+      );
     }
   }
 
   if (totals.subtotalEnsino < 16) {
     erros.push("Carga Horária para Ensino abaixo da mínima.");
   } else if (totals.subtotalEnsino > 40) {
-    // Mantive a mensagem original
+    // Mantive tua mensagem original (mas ela tá confusa: fala 20h)
     erros.push("Carga Horária para ensino acima de 20h");
   }
 
-  if (totals.subtotalGraduacao < 4) erros.push("Adicione no mínimo 4 horas para ensino de graduação.");
-  if (totals.subtotalPos > 16) erros.push("Você adicionou mais de 16 horas para pos.");
-  if (totals.subtotalGestao > 40) erros.push("Você adicionou mais de 40 horas para outras atividades de gestão.");
-  if (totals.subtotalExtensao > 20) erros.push("Você adicionou mais de 20 horas para outras atividades de extensão.");
-  if (totals.subtotalOutras > 8) erros.push("Você adicionou mais de 8 horas para outras atividades relevantes.");
+  if (totals.subtotalGraduacao < 4) {
+    erros.push("Adicione no mínimo 4 horas para ensino de graduação.");
+  }
+  if (totals.subtotalPos > 16) {
+    erros.push("Você adicionou mais de 16 horas para pos.");
+  }
+
+  if (totals.subtotalGestao > 40) {
+    erros.push("Você adicionou mais de 40 horas para outras atividades de gestão.");
+  }
+  if (totals.subtotalExtensao > 20) {
+    erros.push("Você adicionou mais de 20 horas para outras atividades de extensão.");
+  }
+  if (totals.subtotalOutras > 8) {
+    erros.push("Você adicionou mais de 8 horas para outras atividades relevantes.");
+  }
 
   return erros;
 }
