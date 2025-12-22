@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-
+.firebaserc
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -24,7 +24,7 @@ dist-ssr
 *.sw?
 .firebase/*
 .env
-
+firebase.json
 # Outros
 kustomize/base/secret-regcred.yaml
 passwords-laravel-*.txt
