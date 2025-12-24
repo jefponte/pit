@@ -1,14 +1,14 @@
 version: '3.8'
 
 services:
-  uniselec-pit:
+  app-pit:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         VERSION: "1.0.0"
         COMMIT_SHA: "${COMMIT_SHA}"
-    container_name: uniselec-pit
+    container_name: app-pit
     ports:
       - "8088:80"
     environment:
